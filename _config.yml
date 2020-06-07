@@ -6,16 +6,14 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: Your awesome title
-email: your-email@domain.com
+title: LAMurakami GitHub Pages Blog
+email: GitHub-Blog@lamurakami.com
 description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  The LAMurakami GitHub Pages Blog is published using the Jekyll static site
+   generator.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://yourdomain.com" # the base hostname & protocol for your site
-twitter_username: jekyllrb
-github_username:  jekyll
+url: "https://blog.lamurakami.com" # the base hostname & protocol for your site
+github_username:  LAMurakami
 
 # Build settings
 markdown: kramdown

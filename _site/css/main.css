@@ -7,6 +7,18 @@ dl, dd, ol, ul, figure {
   margin: 0;
   padding: 0; }
 
+h1 {
+  color: #397cbd; }
+
+h2 {
+  color: #9b4703; }
+
+a[href]:hover {
+  background: cyan; }
+
+a:hover img {
+  background: white; }
+
 /**
  * Basic styling
  */

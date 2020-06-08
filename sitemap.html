@@ -8,12 +8,24 @@ permalink: /Sitemap.html
   <h1> {{ page.title }} </h1>
   <h2>Posts</h2>
 
-  <ul class="post-list">
+  <ul>
     {% for post in site.posts %}
       <li>
         {{ post.date | date: "%b %-d, %Y" }}
          -
           <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h2>Static Pages</h2>
+  <ul>
+    {% for file in site.static_files %}
+      <li>
+        {{ file.modified_time | date: "%b %-d, %Y" }}
+         -
+          <a href="{{ file.path | prepend: site.baseurl }}">
+          {{ file.path }} </a>
       </li>
     {% endfor %}
   </ul>
@@ -30,4 +42,4 @@ permalink: /Sitemap.html
           </a>
       </li>
     {% endfor %}
-</ul>
+  </ul>

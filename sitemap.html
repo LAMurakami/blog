@@ -1,10 +1,12 @@
 ---
 layout: default
 top_nav_name: Site map
+title: LAMurakami GitHub Pages Blog Site Map
 permalink: /Sitemap.html
 ---
 
-  <h1>Posts</h1>
+  <h1> {{ page.title }} </h1>
+  <h2>Posts</h2>
 
   <ul class="post-list">
     {% for post in site.posts %}
@@ -16,7 +18,7 @@ permalink: /Sitemap.html
     {% endfor %}
   </ul>
 
-  <h1>Other Pages</h1>
+  <h2>Other Pages</h2>
   <ul>
     {% for page in site.pages %}
       <li>

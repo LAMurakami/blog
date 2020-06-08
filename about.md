@@ -1,6 +1,7 @@
 ---
 layout: page
-title: About
+title: About LAMurakami GitHub Pages Blog
+short_title: About
 permalink: /about/
 ---
 

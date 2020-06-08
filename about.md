@@ -1,8 +1,8 @@
 ---
 layout: page
 title: About LAMurakami GitHub Pages Blog
-short_title: About
-permalink: /about/
+top_nav_name: About
+permalink: /About/
 ---
 
 The LAMurakami GitHub Pages Blog uses the base Jekyll theme.

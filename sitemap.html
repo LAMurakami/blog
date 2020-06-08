@@ -1,0 +1,36 @@
+---
+layout: default
+top_nav_name: Site map
+permalink: /Sitemap.html
+---
+
+  <h1>Posts</h1>
+
+  <ul class="post-list">
+    {% for post in site.posts %}
+      <li>
+        {{ post.date | date: "%b %-d, %Y" }}
+         -
+          <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h1>Other Pages</h1>
+  <ul>
+    {% for page in site.pages %}
+      <li>
+          <a href="{{ page.url | prepend: site.baseurl }}">
+            {% if page.title %} {{ page.title }}
+            {% else %} {{ page.url }}
+            {% endif %}
+
+          </a>
+      </li>
+    {% endfor %}
+</ul>
+Site last updated: {{site.time | date: '%Y-%m-%d' }}
+<p>
+You can find the source code for this site at:
+{% include icon-github.html username="LAMurakami" %} /
+<a href="https://github.com/LAMurakami/blog">lamurakami-blog</a>

@@ -2,7 +2,6 @@
 layout: post
 title:  "My first static websites built with Jekyll"
 date:   2020-06-07 11:46:40 -0800
-categories: jekyll update
 ---
 My first [LAMurakami GitHub Page][lamurakami-github-pages] publised to the GitHub Pages service was `raw html` from the master branch of my `lamurakami.github.io repo` based on [GitHub Pages documentation][github-pages-docs].  After that I published a page from the /docs folder of the master branch of a repo that had been created 5 years ago.
 

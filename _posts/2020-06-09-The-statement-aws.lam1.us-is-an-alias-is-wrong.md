@@ -2,7 +2,6 @@
 layout: post
 title:  "The statement *aws.lam1.us is an alias for lamurakami.duckdns.org* from host is wrong!"
 date:   2020-06-09 11:47:12 -0800
-categories: jekyll update
 ---
 This phrase is returned when I use the `host` command on a linux system.  The `host` command is a DNS lookup utility and actually iterprets this argument as a domain name or an IP address that is to be looked up.
 

@@ -6,7 +6,7 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: LAMurakami GitHub Pages Blog
+title: LAMurakami Blog
 email: GitHub-Blog@lamurakami.com
 description: > # this means to ignore newlines until "baseurl:"
   Static site published using Jekyll.

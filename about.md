@@ -5,7 +5,7 @@ top_nav_name: About
 permalink: /About/
 ---
 
-The LAMurakami GitHub Pages Blog uses the base Jekyll theme.
+The LAMurakami Blog uses the base Jekyll theme to publish on GitHub Pages.
 
 You can find the source code for this site at:
 {% include icon-github.html username="LAMurakami" %} /
@@ -13,10 +13,16 @@ You can find the source code for this site at:
 
 My [LAMurakami GitHub Pages][lamurakami-github-pages] source is at:
 {% include icon-github.html username="LAMurakami" %} /
-[lamurakami-user-pages](https://github.com/LAMurakami/lamurakami.github.io)
-
+[lamurakami.github.io](https://github.com/LAMurakami/lamurakami.github.io)
 
 Basic Jekyll usage documentation: [jekyllrb.com](http://jekyllrb.com/)
+
+Jekyll uses the [Liquid](https://shopify.github.io/liquid)
+ open-source template language created
+ by Shopify and written in Ruby.
+You can find the source code for Liquid at:
+{% include icon-github.html username="shopify" %} /
+[liquid](https://github.com/shopify/liquid)
 
 You can find the source code for the Jekyll new theme at:
 {% include icon-github.html username="jglovier" %} /

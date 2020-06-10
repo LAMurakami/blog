@@ -1,12 +1,12 @@
 ---
 layout: post
 title:  "The statement *aws.lam1.us is an alias for lamurakami.duckdns.org* from host is wrong!"
-date:   2020-06-09 19:47:12 -0800
+date:   2020-06-09 11:47:12 -0800
 categories: jekyll update
 ---
-This phrase is returned when I use the host command on a linux system.  The host command is a DNS lookup utility and actually iterprets this argument as a domain name or an IP address that is to be looked up.
+This phrase is returned when I use the `host` command on a linux system.  The `host` command is a DNS lookup utility and actually iterprets this argument as a domain name or an IP address that is to be looked up.
 
-As I analyze my initial response I understand that there was a time when I didn't consider it wrong.  That was before what is now known as the [World Wide Web][World-Wide-Web].  The host command was developed by the Internet Software Consortium who also developed the BIND daemon decades before the web, browsers and the http protocol existed.
+As I analyze my initial response I understand that there was a time when I didn't consider it wrong.  That was before what is now known as the [World Wide Web][World-Wide-Web].  The `host` command was developed by the Internet Software Consortium who also developed the BIND daemon decades before the web, browsers and the http protocol existed.
 
 Today I think of a host name as the name of a website.  I then have to add that different protocols can lead you to different websites.  Apache2 and most web servers can support the https protocol which adds encryption and authentication as well as the less secure http protocol and can serve it from a different DocumentRoot just as it can have a different DocumentRoot based on the host name.  For me an alias is a host name that leads you to the same website, served from the same DocumentRoot.
 
@@ -27,7 +27,7 @@ I an using the "+s=>" notation above to indicate redirects for both the http and
 
 Within the above context there are no aliases for the [https://github.lamurakami.com][github-lamurakami-com] and [https://blog.lamurakami.com][blog-lamurakami-com] sites.  There are redirects but I do not consider the from of a redirect to be an alias.
 
-If you use what the host command says is an alias for blog.lamurakami.com the address bar of a browser you end up at a completely different website.
+If you use what the `host` command says is an alias for blog.lamurakami.com the address bar of a browser you end up at a completely different website.
 
 I do have some sites that are true aliases.  The [aws.lam1.us][aws-lam1-us] and [www.lam1.us][www-lam1-us] are both served by my AWS cloud server from the default site configuration for http traffic.  In the case of this site if you use the CNAME target in a web browser you are redirected to [http://lamurakami.duckdns.org][lamurakami-duckdns-org] which once again is a completely different website.
 
@@ -38,7 +38,7 @@ The [http://lamurakami.duckdns.org][lamurakami-duckdns-org] website is created d
 
 My LAM AWS VPC currently supports a number of websites using four different Dynamic Domain Name Service subdomains.  The websites are served from 1 to four different AWS EC2 server instances each with it's own public IP address.
 
-All of this is related to me adding a page to the blog.lamurakami.com site about my sites.  It's my first website using Jekyll and Liquid and I already created a sitemap page and was thinking about a lam_sites collection to build a page.  It was in thinking about the structure I would use and the relationships that I would want in the structure that I decided [aws.lam1.us][aws-lam1-us] is NOT an alias for [lamurakami.duckdns.org][lamurakami-duckdns-org] and I would prefer "aws.lam1.us has a CNAME target of lamurakami.duckdns.org".  If I find the source and it's on GitHub, I could clone, branch, amke the change, and create a pull request to see if I could get the change implemented.
+All of this is related to me adding a page to the blog.lamurakami.com site about my sites.  It's my first website using Jekyll and Liquid and I already created a sitemap page and was thinking about a lam_sites collection to build a page.  It was in thinking about the structure I would use and the relationships that I would want in the structure that I decided [aws.lam1.us][aws-lam1-us] is NOT an alias for [lamurakami.duckdns.org][lamurakami-duckdns-org] and I would prefer "aws.lam1.us has a CNAME target of lamurakami.duckdns.org".  If I find the source for the `host` command and it's on GitHub, I could clone, branch, amke the change, and create a pull request to see if I could get the change implemented.
 
 While I was doing this I realized my website built with a template that primarily supports posts should have more than one post.
 

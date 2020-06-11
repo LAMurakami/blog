@@ -1,0 +1,68 @@
+---
+layout: post
+title:  "Let’s Encrypt has achieved it's goal of significantly lowering the complexity of setting up and maintaining TLS encryption."
+date:   2020-06-11 08:34:37 -0800
+---
+<!-- start content -->
+<div id="mw-content-text" lang="en" dir="ltr"><div><h2><span id="Let's_Encrypt"></span><span id="Let.27s_Encrypt">Let's Encrypt</span></h2>
+<p><a rel="nofollow" href="https://letsencrypt.org">https://letsencrypt.org</a> GitHub <a rel="nofollow" href="https://en.wikipedia.org/wiki/Let%27s_Encrypt">Let's Encrypt - Wikipedia</a>
+</p><p>Let's Encrypt has been around since 2016 but I didn't get around to finding it till I built <a rel="nofollow" href="https://github.lamurakami.com/About">my first GitHub Pages site</a>.  I was impressed that although there were warnings that the process could take up to 24 hours the certificate for the custom domain name I specified was created within minutes and I was able to Enforce HTTPS.  All this was done on the settings page of a repo that had already been published by entering the custom domain name in the textbox and after the certificate had been generated selecting the checkbox.
+</p><p>By the time I created <a rel="nofollow" href="https://blog.lamurakami.com">my blog site</a> I wanted to investigate the Let's Encrypt automated process more.  When I saw that I could create a wildcard certificate without giving hundreds of dollars to some company it was a task.
+</p><p>The Let's Encrypt claims its goal is to make encrypted connections to World Wide Web servers ubiquitous.  By eliminating payment, web server configuration, validation email management and certificate renewal tasks, it is meant to significantly lower the complexity of setting up and maintaining TLS encryption.
+</p><p>Let’s Encrypt is a free, automated, and open certificate authority (CA), run for the public’s benefit.  Anyone who owns a domain name can use Let’s Encrypt to obtain a trusted certificate at <b>zero cost</b>.  Software running on a web server can interact with Let’s Encrypt to painlessly obtain a certificate, securely configure it for use, and automatically take care of renewal.  All certificates issued or revoked will be publicly recorded and available for anyone to inspect.
+</p><p>In 2002 VeriSign, while on the verge of raising the price of some certs by up to 60%, claimed that certificates should not be issued using that type of domain validation.  At that time it was GeoTrust selling certs for $119 a year, compared to VeriSign's between $250 and $350 pricing.  I believe this was for single domain serts with wildcard certs costing hundreds more. See: <a rel="nofollow" href="https://www.theregister.com/2002/07/24/theres_certs_and_certs_verisign">There's certs and certs</a>
+</p><p>It was in the early part of this century that I moved the database driven parts of my site to the HTTPS protocol for security.  I remember being at a DoD Information Assurance Awareness course on Fort Wainwright being presented by the <a rel="nofollow" href="https://en.wikipedia.org/wiki/Signal_Corps_%28United_States_Army%29">Army Signal Corps</a> and being shown how much they could see from me interacting with my home server from their lab over http.  That had been the initiative to making the move to HTTPS a task.  I accomplished the task but used self signed certificates because of the cost.  Within the last few months I had already had to address a couple of issues with my self signed certificates.  First I created the <a rel="nofollow" href="https://bugzilla.mozilla.org/show_bug.cgi?id=1603975">Unable to view self-signed certificate in Firefox 71.0 (64-bit)</a> Bug report.  Later I had to create a new certificate when Apache was complaining about the key being too short.  The old key was 1024 bits and the new one was 4096 bits.  This was though a manual process I had documented on my private wiki.
+</p><p>With certbot, I spent the most time determining which challenge method and even attempted apache before finding that I wanted to use the oldest DNS-01 which involves creating a TXT record with a hash for each domain name in the certificate.  My DNS Provider Hover supports TXT records and provides <a rel="nofollow" href="https://help.hover.com/hc/en-us/articles/217282457-Managing-DNS-records-#h_a07796a7-ebe0-4b4c-a51f-6ade385478ee">a simple page</a> to add one to the domains I manage.  The page is one I was already familiar with that has fields dependent on the record type selected from a drop-down list including A/AAAA CNAME MX TXT and SRV records.  This is from the Add DNS record option I use all the time.
+</p><p>On Ubuntu and Linux Mint the certbot package is included in the official repositories so installation was simple:
+</p>
+<pre>sudo apt-get install certbot
+</pre>
+<p>I was able to generate and install a LetsEncrypt certificate for the lam1.us and *.lam1.us domains and install it on multiple machines.  To use the new keys I modified the /etc/apache2/sites-available/default-ssl.conf file:
+</p>
+<pre>SSLCertificateFile /etc/letsencrypt/live/lam1.us/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/lam1.us/privkey.pem
+</pre>
+<p>I actually generated a certificate good for *.lam1.us and forgot lam1.us.  I had to agree that the IP address will be recorded related to the generation of the certificate,  The DNS challenge has me add TXT records to the domain for validation.  When I issued the command to generate the certificate with both I was prompted to Extend the existing certificate.  I used:
+</p>
+<pre>sudo certbot certonly --manual \
+--preferred-challenges dns-01 -d *.lam1.us -d lam1.us
+</pre>
+<p>The certificates and Expiry dates can be seen with:
+</p>
+<pre>sudo certbot certificates
+</pre>
+<p>Let’s Encrypt CA issues <b>short-lived certificates (90 days).  You can attempt to renew any previously-obtained certificates that expire in less than 30 days</b> with:
+</p>
+<pre>sudo certbot renew
+</pre>
+<p>The Ubuntu package when installed on aws.lam1.us installed a cron job that should have already renewed the certificate by the time I see the new monthly calendar reminder but the --deploy-hook is not used and apache2 won't use the new certificate until it is restarted.
+</p><p>The complete process of generating and installing Let's Encrypt keys on my server was at least as easy as my regenerate certificate process for a self signed certificate and I get a certificate that browsers accept without pause.  The renew process is even easier being automated.
+</p><p>I do have some additional tasks.  I wanted a wildcard certificate so the same one could be used on every LAM AWS EC2 instance I launch as well as my machines at home which all get names in the lam1.us domain.  I believe Let’s Encrypt has achieved it's goal of significantly lowering the complexity of setting up and maintaining TLS encryption.
+</p>
+<!-- 
+NewPP limit report
+Cached time: 20200611222615
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.015 seconds
+Real time usage: 0.015 seconds
+Preprocessor visited node count: 14/1000000
+Preprocessor generated node count: 0/1000000
+Post‐expand include size: 40/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    0.000      1 -total
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:363-0!canonical and timestamp 20200611222615 and revision id 5080
+ -->
+</div></div><div>
+Retrieved from "<a dir="ltr" href="https://ak17.lam1.us/A/index.php?title=LetsEncrypt&amp;oldid=5080">https://ak17.lam1.us/A/index.php?title=LetsEncrypt&amp;oldid=5080</a>"</div>
+<!-- end content -->

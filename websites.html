@@ -1,0 +1,23 @@
+---
+layout: default
+top_nav_name: Websites
+title: LAMurakami Websites
+permalink: /Websites.html
+---
+
+  <h1> {{ page.title }} </h1>
+
+  <dl>
+  {% for website in site.websites %}
+  <dt><a href="{{ website.w_url }}">{{ website.title }} - {{ website.w_url }}</a>
+    <dd><ul>
+    <li>CNAME target: {{ website.CNAME_target }}</li>
+    <li>server: {{ website.server }}</li>{% if website.aliases %}
+<li>aliases:{% assign alias = website.aliases | split: " " %}
+{% for r_url in alias %}<a href="{{ r_url }}">{{ r_url }}</a>{% endfor %}</li>{% endif %}{% if website.redirects %}
+    <li>redirects:{% assign redirect = website.redirects | split: " " %}
+    {% for r_url in redirect %}<a href="{{ r_url }}">{{ r_url }}</a>
+{% endfor %}</li>{% endif %}
+    {% if website.use_content %}<li>{{ website.content | markdownify }}</li> {% endif %}
+  </ul></dd>
+  {% endfor %}</dl>

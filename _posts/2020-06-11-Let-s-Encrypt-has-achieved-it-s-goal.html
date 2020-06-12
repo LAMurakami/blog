@@ -31,6 +31,14 @@ SSLCertificateKeyFile /etc/letsencrypt/live/lam1.us/privkey.pem
 </p>
 <pre>sudo certbot certificates
 </pre>
+<p>After a little more research I was able to get a certificate for the duckdns.org subdomains I use for Dynamic DNS on my LAM AWS EC2 instances.  To use the http-01 protocol I had to stop the apache2 server so that certbot could listen on port 80.
+</p>
+<pre>sudo systemctl stop apache2
+sudo certbot certonly --standalone --preferred-challenges http-01 \
+ -d lamurakami.duckdns.org -d lam1.duckdns.org -d lam2.duckdns.org \
+ -d larryforalaska.duckdns.org
+sudo systemctl start apache2
+</pre>
 <p>Let’s Encrypt CA issues <b>short-lived certificates (90 days).  You can attempt to renew any previously-obtained certificates that expire in less than 30 days</b> with:
 </p>
 <pre>sudo certbot renew
@@ -64,5 +72,5 @@ Transclusion expansion time report (%,ms,calls,template)
 <!-- Saved in parser cache with key wikidb:pcache:idhash:363-0!canonical and timestamp 20200611222615 and revision id 5080
  -->
 </div></div><div>
-Retrieved from "<a dir="ltr" href="https://ak17.lam1.us/A/index.php?title=LetsEncrypt&amp;oldid=5080">https://ak17.lam1.us/A/index.php?title=LetsEncrypt&amp;oldid=5080</a>"</div>
+Retrieved from "<a dir="ltr" href="https://ak17.lam1.us/A/index.php?title=LetsEncrypt&amp;oldid=5083">https://ak17.lam1.us/A/index.php?title=LetsEncrypt&amp;oldid=5083</a>"</div>
 <!-- end content -->

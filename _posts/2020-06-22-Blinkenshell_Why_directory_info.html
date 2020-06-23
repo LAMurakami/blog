@@ -1,0 +1,54 @@
+---
+layout: post
+title:  "Why do pages at lam.blinkenshell.org always show directory information?"
+date:   2020-06-22 16:03:05 -0800
+---
+<!-- start content -->
+<div id="mw-content-text" lang="en" dir="ltr"><div><p>This page is in the About sub directory of the public_html directory of BlinkenShell user lam nickname The_One's ${HOME} directory. 
+</p><p>The ability to post personal <a rel="nofollow" href="https://blinkenshell.org/wiki/Info/Webhosting">web pages at BlinkenShell</a> is included in the Free Shell Accounts they offer.
+These personal web pages are published as a separate sub domain name within the blinkenshell.org domain.
+They support using an .htaccess file to customize the behavior of the website.
+</p><p>Blinkenshell Free Shell Accounts have a 100 MB Disk Quota and do not support dynamic web pages with PHP or CGI and MySQL or a custom domain name.  These features are available to those that pay for a BlinkenShell Supporter Account for 300 Swedish Krona ($31.20 USD) per year.
+</p><p>I have access to many webservers including the LAM AWS VPC that supports the clone of this website published at several custom domain names.
+</p><p>When putting up the first pages on this site I wanted pages on the site to use <a rel="nofollow" href="http://lam.blinkenshell.org/lam.css">my Cascading Style Sheet</a> and have a consistent navigation which I am used to having done with what I call a wrapper script.  I also have experience with static site build environments such as the Jekyll and Liquid site templates supported by GitHub Pages.  GitHub Pages supports larger websites (up to 1 GB per repo), custom domain names including automatic generation of ssl certificates and keys and an enforce HTTPS feature as well as automatically performing the Jekyll static site rebuild process when triggered by a git commit being pushed to the GitHub repo.  GitHub Pages with all it's capabilities does not support directory browsing.  BlinkenShell is really about shell access which is also not provided by GitHub Pages and the Webhosting is an extra.
+</p><p>I decided to make my BlinkenShell site use directory browsing and the .htaccess file to take care of my needs.  This makes it a website not supported by GitHub pages.  Within <a rel="nofollow" href="http://lam.blinkenshell.org/apacheConfiguration.txt">the .htaccess file</a> I specify that directories are to be listed in Descending Date order.  This makes the most recently changed entries be at the top of the list.  I also specify a Cascading Style Sheet be applied to the directory listings displayed in html.  I specified that FOOTER.html is the name of README files that are displayed as the footer of directory listings.  I left HEADER.html files as the ones that are displayed as the heading of directory listings.
+</p><p>With this architecture I create URLs by creating directories.  By avoiding using index.html files each URL other than the top of the site automatically gets a Parent Directory navigation link.  At the top level I created a HEADER.html file that provides a drop down navigation menu that uses Top navigation bar Id and class definitions in the directory index Cascading Style Sheet applied to a nested unordered list.  I apply this top navigation to sub directory URLs by creating a symbolic link to the HEADER.html file at the top of the site.  This allows me to change the top navigation displayed on all my site pages which are directory listings by changing the one file.
+</p><p>Each page within my site is given the FOOTER.html name within the directory structure above supporting the site navigation.  Because it is being displayed as an index page the directory index Cascading Style Sheet is used without having to be specified within the file.
+</p><p>I can copy a file that expects to have site style applied by a wrapper or a build process to this site as FOOTER.html file and this sites top navigation and style are applied.  As an example, today I updated a file within this site with the following:
+</p><p>From ubuntu@aws.lam1.us:/var/www/sites/html which is published as <a rel="nofollow" href="http://sites.lam1.us">http://sites.lam1.us</a>
+</p>
+<pre>scp -p index.html triton:~/public_html/Sites/FOOTER.html
+</pre>
+<p>This results in a page that is displayed with the lam Blinkenshell style and navigation on this site without any changes to the file other than the file name.
+</p><p>This page is actually being written on my private wiki.  I will use an extract process to create the static page that I will post to both the <a rel="nofollow" href="http://lam.blinkenshell.org">http://lam.blinkenshell.org</a> and <a rel="nofollow" href="https://blog.lamurakami.com">https://blog.lamurakami.com</a> sites.  Each will when published adopt the style and navigation of the site.  The extract from a wiki process was originally developed when I was employed by the <a rel="nofollow" href="https://en.wikipedia.org/wiki/Arctic_Region_Supercomputing_Center">Arctic Region Supercomputing Center</a> and is a topic possibly worth another post.
+</p>
+<!-- 
+NewPP limit report
+Cached time: 20200622233106
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.012 seconds
+Real time usage: 0.012 seconds
+Preprocessor visited node count: 1/1000000
+Preprocessor generated node count: 0/1000000
+Post‐expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 1/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    0.000      1 -total
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:365-0!canonical and timestamp 20200622233106 and revision id 5125
+ -->
+</div></div>
+As of Monday, June 22, 2020 I have had my BlinkenShell account for more than three years.
+<p>
+<div>
+Retrieved from "<a dir="ltr" href="https://ak17.lam1.us/A/index.php?title=Blinkenshell_-_Why_do_pages_on_this_site_always_show_directory_information%3F&amp;oldid=5125">https://ak17.lam1.us/A/index.php?title=Blinkenshell_-_Why_do_pages_on_this_site_always_show_directory_information%3F&amp;oldid=5125</a>"</div>
+<!-- end content -->

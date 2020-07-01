@@ -43,8 +43,11 @@ sudo systemctl start apache2
 </p>
 <pre>sudo certbot renew
 </pre>
-<p>The Ubuntu package when installed on aws.lam1.us installed a cron job that should have already renewed the certificate by the time I see the new monthly calendar reminder but the --deploy-hook is not used and apache2 won't use the new certificate until it is restarted.
-</p><p>The complete process of generating and installing Let's Encrypt keys on my server was at least as easy as my regenerate certificate process for a self signed certificate and I get a certificate that browsers accept without pause.  The renew process is even easier being automated.
+<p>The Ubuntu package when installed on aws.lam1.us installed a systemd timer that checks twice a day if the certificates need to be renewed.  The --deploy-hook is not used and apache2 won't use the new certificate until it is restarted or configuration reloaded.  You can see the timer status with:
+</p>
+<pre>systemctl list-timers certbot.timer
+</pre>
+<p>The complete process of generating and installing Let's Encrypt keys on my server was at least as easy as my regenerate certificate process for a self signed certificate and I get a certificate that browsers accept without pause.  The renew process is even easier being automated.
 </p><p>I do have some additional tasks.  I wanted a wildcard certificate so the same one could be used on every LAM AWS EC2 instance I launch as well as my machines at home which all get names in the lam1.us domain.  I believe Let’s Encrypt has achieved it's goal of significantly lowering the complexity of setting up and maintaining TLS encryption.
 </p>
 <!-- 
@@ -73,4 +76,5 @@ Transclusion expansion time report (%,ms,calls,template)
  -->
 </div></div><div>
 Retrieved from "<a dir="ltr" href="https://ak17.lam1.us/A/index.php?title=LetsEncrypt&amp;oldid=5083">https://ak17.lam1.us/A/index.php?title=LetsEncrypt&amp;oldid=5083</a>"</div>
+<br>Updated with systemd timer info instead of cron job info on Tuesday, June 30, 2020.
 <!-- end content -->

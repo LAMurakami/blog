@@ -14,6 +14,26 @@ h2 { color: #9b4703; }
 a[href]:hover { background: cyan }
 a:hover img { background: white }
 
+/* Top navigation bar Id and class definitions follow: */
+
+#top_nav { padding-top: 0px; margin-top: 0px; height:34px; align:right; }
+a.trigger { background-color: #537ab3; }
+#menuwrapper { color:#ffffff; margin-top:0; font-size:11px; width:100%;}
+.clearit { clear: both; height: 0; line-height: 0.0; font-size: 0; }
+#menuBar, #menuBar ul { background-color:#ADC1D8; z-index: 10;
+    margin-top:0; padding:0; margin-left: 14px; list-style:none;
+    text-align:left; }
+#menuBar a { color: #ffffff; padding: 5px 26px 6px 26px; display:block; }
+#menuBar a.trigger { margin-top:0; padding: 5px 26px 6px 26px; }
+#menuBar li { float: left; width: auto; }
+#menuBar li ul, #menuBar ul li  { width: 24em; }
+#menuBar ul li a { color:#003399; border-right: 0; padding-left: 5px; }
+#menuBar li ul { position: absolute; display: none; }
+#menuBar li:hover a, #menuBar li.fixIEhvr a { background-color:cyan; color:black; }
+#menuBar li:hover ul, #menuBar li.fixIEhvr ul { display: block; }
+#menuBar li:hover ul a, #menuBar li.fixIEhvr ul a { background-color: transparent; }
+#menuBar ul a:hover { background-color: cyan!important; color:black!important; }
+
 /**
  * Basic styling
  */

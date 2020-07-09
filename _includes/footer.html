@@ -5,7 +5,7 @@
     <div class="footer-col-wrapper">
       <div class="footer-col footer-col-1">
         <ul class="contact-list">
-          <li><a href="/">{{ site.title }}</a></li>
+          <li><a href="{{ site.baseurl }}/">{{ site.title }}</a></li>
           <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
         </ul>
       </div>
@@ -17,10 +17,11 @@
             {% include icon-github.html username=site.github_username %}
           </li>
           {% endif %}
+{% if site.github_repo %}
 <li> /
-<a href="https://github.com/LAMurakami/blog">lamurakami-blog</a>
+<a href="https://github.com/{{ site.github_username }}/{{ site.github_repo }}">{{ site.github_repo }}</a>
 </li>
-
+{% endif %}
           {% if site.twitter_username %}
           <li>
             {% include icon-twitter.html username=site.twitter_username %}

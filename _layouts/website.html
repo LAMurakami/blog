@@ -1,0 +1,28 @@
+---
+layout: default
+---
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title }}</h1>
+<a href="{{ page.w_url }}">{{ page.title }} - {{ page.w_url }}</a>
+    <dd><ul>
+    {% if page.repos %}
+     <li>repos: {{ page.repos }}</li>
+    {% endif %}
+    <li>CNAME target: {{ page.CNAME_target }}</li>
+    <li>server: {{ page.server }}</li>{% if page.aliases %}
+<li>aliases:{% assign alias = page.aliases | split: " " %}
+{% for r_url in alias %}<a href="{{ r_url }}">{{ r_url }}</a>{% endfor %}</li>{% endif %}{% if page.redirects %}
+    <li>redirects:{% assign redirect = page.redirects | split: " " %}
+    {% for r_url in redirect %}<a href="{{ r_url }}">{{ r_url }}</a>
+{% endfor %}</li>{% endif %}
+  </ul></dd>
+  </header>
+
+  <div class="post-content">
+    {{ page.content }}
+  </div>
+
+</article>
+

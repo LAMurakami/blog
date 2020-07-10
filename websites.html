@@ -11,6 +11,9 @@ permalink: /Websites.html
   {% for website in site.websites %}
   <dt><a href="{{ website.w_url }}">{{ website.title }} - {{ website.w_url }}</a>
     <dd><ul>
+    {% if website.repos %}
+     <li>repos: {{ website.repos }}</li>
+    {% endif %}
     <li>CNAME target: {{ website.CNAME_target }}</li>
     <li>server: {{ website.server }}</li>{% if website.aliases %}
 <li>aliases:{% assign alias = website.aliases | split: " " %}

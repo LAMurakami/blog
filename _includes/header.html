@@ -24,15 +24,20 @@
         </li>
       {% endif %}
     {% endfor %}
-  </ul>
-</li>
-<li><a class="trigger" href="{{ site.baseurl }}/Sitemap.html" name="top">Static</a>
-  <ul>
     {% for file in site.static_files %}
       <li><a href="{{ file.path | prepend: site.baseurl }}">{{ file.path }}</a></li>
     {% endfor %}
   </ul>
 </li>
+
+<li><a class="trigger" href="{{ site.baseurl }}/Websites.html" name="top">Sites</a>
+  <ul>
+    {% for website in site.websites %}
+      <li><a href="{{ website.url | prepend: site.baseurl }}">{{ website.title }}</a></li>
+    {% endfor %}
+  </ul>
+</li>
+
 <li><a class="trigger" href="{{ site.baseurl }}/About" name="top">About</a></li>
 </ul>
 </div></div><br class="clearit"><!-- END top_nav menuwrapper menuBar -->

@@ -18,7 +18,7 @@ layout: default
     <li>CNAME target: {{ page.CNAME_target }}</li>
     <li>server: {{ page.server }}</li>{% if page.aliases %}
 <li>aliases:{% assign alias = page.aliases | split: " " %}
-{% for r_url in alias %}<a href="{{ r_url }}">{{ r_url }}</a>{% endfor %}</li>{% endif %}{% if page.redirects %}
+{% for r_url in alias %}<a href="{{ r_url }}">{{ r_url }}</a> {% endfor %}</li>{% endif %}{% if page.redirects %}
     <li>redirects:{% assign redirect = page.redirects | split: " " %}
     {% for r_url in redirect %}<a href="{{ r_url }}">{{ r_url }}</a>
 {% endfor %}</li>{% endif %}

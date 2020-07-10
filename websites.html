@@ -22,7 +22,7 @@ permalink: /Websites.html
     <li>CNAME target: {{ website.CNAME_target }}</li>
     <li>server: {{ website.server }}</li>{% if website.aliases %}
 <li>aliases:{% assign alias = website.aliases | split: " " %}
-{% for r_url in alias %}<a href="{{ r_url }}">{{ r_url }}</a>{% endfor %}</li>{% endif %}{% if website.redirects %}
+{% for r_url in alias %}<a href="{{ r_url }}">{{ r_url }} </a>{% endfor %}</li>{% endif %}{% if website.redirects %}
     <li>redirects:{% assign redirect = website.redirects | split: " " %}
     {% for r_url in redirect %}<a href="{{ r_url }}">{{ r_url }}</a>
 {% endfor %}</li>{% endif %}

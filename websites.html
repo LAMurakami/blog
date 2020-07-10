@@ -14,6 +14,11 @@ permalink: /Websites.html
     {% if website.repos %}
      <li>repos: {{ website.repos }}</li>
     {% endif %}
+    {% if website.clones %}
+        <li>clones:{% assign clone = website.clones | split: " " %}
+        {% for r_url in clone %}<a href="{{ r_url }}">{{ r_url }}</a>
+        {% endfor %}</li>
+    {% endif %}
     <li>CNAME target: {{ website.CNAME_target }}</li>
     <li>server: {{ website.server }}</li>{% if website.aliases %}
 <li>aliases:{% assign alias = website.aliases | split: " " %}

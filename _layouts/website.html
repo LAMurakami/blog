@@ -10,6 +10,11 @@ layout: default
     {% if page.repos %}
      <li>repos: {{ page.repos }}</li>
     {% endif %}
+    {% if page.clones %}
+        <li>clones:{% assign clone = page.clones | split: " " %}
+        {% for r_url in clone %}<a href="{{ r_url }}">{{ r_url }}</a>
+        {% endfor %}</li>
+    {% endif %}
     <li>CNAME target: {{ page.CNAME_target }}</li>
     <li>server: {{ page.server }}</li>{% if page.aliases %}
 <li>aliases:{% assign alias = page.aliases | split: " " %}

@@ -9,7 +9,7 @@ permalink: /Websites.html
 
   <dl>
   {% for website in site.websites %}
-  <dt><a href="{{ website.w_url }}">{{ website.title }} - {{ website.w_url }}</a>
+  <dt><a href="{{ website.url | prepend: site.baseurl }}">{{ website.title }}</a> - <a href="{{ website.w_url }}">{{ website.w_url }}</a>
     <dd><ul>
     {% if website.repos %}
      <li>repos: {{ website.repos }}</li>

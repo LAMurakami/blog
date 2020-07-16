@@ -20,4 +20,5 @@ collections:
    websites:
      output: true
 # Build settings
+future: true
 markdown: kramdown

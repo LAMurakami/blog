@@ -19,6 +19,7 @@ github_repo: blog
 collections:
    websites:
      output: true
+   man:
+     output: true
 # Build settings
-future: true
 markdown: kramdown

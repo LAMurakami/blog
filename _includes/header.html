@@ -13,6 +13,9 @@
 </li>
 <li><a class="trigger" href="{{ site.baseurl }}/Sitemap.html" name="top">Pages</a>
   <ul>
+    {% for man_page in site.man %}
+      <li><a href="{{ man_page.url | prepend: site.baseurl }}">{{ man_page.title }}</a></li>
+    {% endfor %}
     {% for page in site.pages %}
       {% if page.url != "/" and page.url != "/About/" %}
         <li>

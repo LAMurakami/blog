@@ -1,0 +1,93 @@
+---
+layout: page
+title: "hp-check - Dependency/Version Check Utility"
+---
+<H1>hp-check</H1>
+Section: User Manuals (1)<BR>Updated: 15.1<BR><A HREF="#index">Index</A>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+hp-check - Dependency/Version Check Utility
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+Checks dependency versions,permissions of HPLIP. (Run as 'python ./check.py' from the HPLIP tarball before installation.)
+<A NAME="lbAD">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<B>hp-check [OPTIONS]</B>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS</H2>
+
+<DL COMPACT>
+<DT>Compile-time check:<DD>
+-c or --compile
+<DT>Run-time check:<DD>
+-r or --run or --runtime
+<DT>Compile and run-time checks:<DD>
+-b or --both (default)
+<DT>Set the logging level:<DD>
+-l&lt;level&gt; or --logging=&lt;level&gt;
+&lt;level&gt;: none, info*, error, warn, debug (*default)
+<DT>Run in debug mode:<DD>
+-g (same as option: -ldebug)
+<DT>Output plain text only:<DD>
+-t
+<DT>This help information:<DD>
+-h or --help
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES</H2>
+
+<DL COMPACT>
+<DT>1. For checking for the proper build environment for the HPLIP supplied tarball (.tar.gz or .run),<DD>
+<P>
+<DT>use the --compile or --both switches.<DD>
+<P>
+<DT>2. For checking for the proper runtime environment for a distro supplied package (.deb, .rpm, etc),<DD>
+<P>
+<DT>use the --runtime switch.<DD>
+<P>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>AUTHOR</H2>
+
+HPLIP (HP Linux Imaging and Printing) is an
+HP developed solution for printing, scanning, and faxing with
+HP inkjet and laser based printers in Linux.
+<A NAME="lbAH">&nbsp;</A>
+<H2>REPORTING BUGS</H2>
+
+The HPLIP Launchpad.net site
+<B><A HREF="https://launchpad.net/hplip">https://launchpad.net/hplip</A></B>
+
+is available to get help, report
+bugs, make suggestions, discuss the HPLIP project or otherwise
+contact the HPLIP Team.
+<A NAME="lbAI">&nbsp;</A>
+<H2>COPYRIGHT</H2>
+
+Copyright (c) 2001-18 HP Development Company, L.P.
+<P>
+
+This software comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to distribute it
+under certain conditions. See COPYING file for more details.
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">NOTES</A><DD>
+<DT><A HREF="#lbAG">AUTHOR</A><DD>
+<DT><A HREF="#lbAH">REPORTING BUGS</A><DD>
+<DT><A HREF="#lbAI">COPYRIGHT</A><DD>
+
+

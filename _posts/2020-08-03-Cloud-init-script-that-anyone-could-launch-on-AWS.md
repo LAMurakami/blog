@@ -49,7 +49,7 @@ I created a new <a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubuntu-
 <pre>aws ec2 run-instances --count 1 --image-id ami-09dd2e08d601bff67 \
 --instance-type t3.nano --security-group-ids sg-3bda0647 \
 --associate-public-ip-address --key-name aws-nwo-lam1 --user-data \
-file:///var/www/aws/<a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit</a>
+file:///var/www/aws/<a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit.txt</a>
 </pre>
 <h3><span id="LAM_AWS_command_line_options">LAM AWS command line options</span></h3>
 <dl><dt>Launch a single ec2 instance of the t3.nano type which is cheapest or of the t2.micro type which is part of the AWS Free Tier offering.</dt>

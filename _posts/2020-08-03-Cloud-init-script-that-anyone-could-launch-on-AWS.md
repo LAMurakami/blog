@@ -59,10 +59,10 @@ file:///var/www/aws/<a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubu
 <dt>Use a predefined security group</dt>
 <dd>--security-group-ids sg-3bda0647</dd>
 <dt>Use the latest Ubuntu Server image</dt>
-<dd>--image-id ami-09dd2e08d601bff67</dd>
+<dd>--image-id ami-056cb9ae6e2df09e8</dd>
 <dt>Specify the file with the user data&#160;</dt>
 <dd>--user-data file://&lt;file name&gt;</dd></dl>
-<ul><li>ami-09dd2e08d601bff67 This is the Ubuntu Server 20.04 LTS image for the US west 2 AWS region
+<ul><li>ami-056cb9ae6e2df09e8 This is the Ubuntu Server 20.04 LTS image for the US west 2 AWS region
 <ul><li>If you want to run this in another region, use the appropriate image which you can find at the bottom of the Launch instance wizard page.</li></ul></li>
 <li>aws-nwo-lam1 This is my key from AWS Identity and Access Management for the IAM user I want to be able to access the instance.</li>
 <li>sg-3bda0647 This is a pre defined security group.</li>

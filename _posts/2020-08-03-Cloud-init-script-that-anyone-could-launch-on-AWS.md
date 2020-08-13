@@ -46,7 +46,7 @@ I created a new <a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubuntu-
 </p><p>The web server is configured for three websites.  The default website would be displayed if a domain name is pointed to the IP address or domain name of the running instance.  A second website is configured if the browser gets to the site by IP address or the public-hostname assigned to the instance when it launched.  The third website is configured for some domain names I have control of.
 </p>
 <h2><span id="I_can_launch_from_the_command_line_with:">I can launch from the command line with:</span></h2>
-<pre>aws ec2 run-instances --count 1 --image-id ami-09dd2e08d601bff67 \
+<pre>aws ec2 run-instances --count 1 --image-id ami-056cb9ae6e2df09e8 \
 --instance-type t3.nano --security-group-ids sg-3bda0647 \
 --associate-public-ip-address --key-name aws-nwo-lam1 --user-data \
 file:///var/www/aws/<a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit.txt</a>

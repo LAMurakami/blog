@@ -5,8 +5,9 @@ date: 2020-08-03 21:24:00 -0800
 ---
 <!-- start content -->
 <div id="mw-content-text" lang="en" dir="ltr"><div>
-I created a new <a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit</a> script that anyone could launch on Amazon Web Services (AWS).
-<div id="toc"><input type="checkbox" role="button" id="toctogglecheckbox" style="display:none" /><div lang="en" dir="ltr"><h2>Contents</h2><label for="toctogglecheckbox"></label></div>
+<p>I created a new <a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit</a> script that anyone could launch on Amazon Web Services (AWS).
+</p>
+<div id="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" style="display:none" /><div lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><label for="toctogglecheckbox"></label></div>
 <ul>
 <li><a href="#A_web.2C_shell_and_proxy_server_built_from_a_Generic_Ubuntu_Server_image">1 A web, shell and proxy server built from a Generic Ubuntu Server image</a></li>
 <li><a href="#I_can_launch_from_the_command_line_with:">2 I can launch from the command line with:</a>
@@ -46,7 +47,7 @@ I created a new <a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubuntu-
 </p><p>The web server is configured for three websites.  The default website would be displayed if a domain name is pointed to the IP address or domain name of the running instance.  A second website is configured if the browser gets to the site by IP address or the public-hostname assigned to the instance when it launched.  The third website is configured for some domain names I have control of.
 </p>
 <h2><span id="I_can_launch_from_the_command_line_with:">I can launch from the command line with:</span></h2>
-<pre>aws ec2 run-instances --count 1 --image-id ami-07dd19a7900a1f049 \
+<pre>aws ec2 run-instances --count 1 --image-id ami-0892d3c7ee96c0bf7 \
 --instance-type t3.nano --security-group-ids sg-3bda0647 \
 --associate-public-ip-address --key-name aws-nwo-lam1 --user-data \
 file:///var/www/aws/<a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit.txt</a>
@@ -59,10 +60,10 @@ file:///var/www/aws/<a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubu
 <dt>Use a predefined security group</dt>
 <dd>--security-group-ids sg-3bda0647</dd>
 <dt>Use the latest Ubuntu Server image</dt>
-<dd>--image-id ami-056cb9ae6e2df09e8</dd>
-<dt>Specify the file with the user data&#160;</dt>
+<dd>--image-id ami-0892d3c7ee96c0bf7</dd>
+<dt>Specify the file with the user data</dt>
 <dd>--user-data file://&lt;file name&gt;</dd></dl>
-<ul><li>ami-056cb9ae6e2df09e8 This is the Ubuntu Server 20.04 LTS image for the US west 2 AWS region
+<ul><li>ami-0892d3c7ee96c0bf7 This is the Ubuntu Server 20.04.3 LTS image for the US west 2 AWS region
 <ul><li>If you want to run this in another region, use the appropriate image which you can find at the bottom of the Launch instance wizard page.</li></ul></li>
 <li>aws-nwo-lam1 This is my key from AWS Identity and Access Management for the IAM user I want to be able to access the instance.</li>
 <li>sg-3bda0647 This is a pre defined security group.</li>
@@ -147,9 +148,7 @@ UPDATED for lam2.duckdns.org IP address update
 <p>The lam2 instance was a candidate to be modified so that anyone could launch it precisely because it did not have html/Private, MediaWiki or the databases that I only support on HTTPS.
 </p><p>I have had an AWS VPC since 2017 but early on added the private EFS and private S3 buckets as a source for initializing.
 </p><p>This year I finally switched to git as my main VCS and decided to publish repos that did not need to remain private to GidHub because of it's value for documentation.  Once I had published the <a rel="nofollow" href="https://github.com/LAMurakami/aws#readme">aws</a> Linux Apache MariaDB in the cloud,
-<a rel="nofollow" href="https://github.com/LAMurakami/no-ssl#readme">no-ssl</a> Default unsecure site configuration,
-<a rel="nofollow" href="https://github.com/LAMurakami/ubuntu-etc#readme">ubuntu-etc</a>
-Ubuntu Server 20.04 configuration changes for LAM AWS VPC EC2 instances
+<a rel="nofollow" href="https://github.com/LAMurakami/no-ssl#readme">no-ssl</a> Default unsecure site configuration
 and
 <a rel="nofollow" href="https://github.com/LAMurakami/arsc#readme">arsc</a> Lawrence A. Murakami at ARSC
 repos to GitHub I realized I could launch the lam2 instance using only publicly available sources for the initialization.
@@ -159,14 +158,13 @@ repos to GitHub I realized I could launch the lam2 instance using only publicly 
 </p>
 <!-- 
 NewPP limit report
-Cached time: 20200804052444
+Cached time: 20220110024857
 Cache expiry: 86400
 Dynamic content: false
 Complications: []
-CPU time usage: 0.030 seconds
-Real time usage: 0.031 seconds
-Preprocessor visited node count: 56/1000000
-Preprocessor generated node count: 0/1000000
+CPU time usage: 0.011 seconds
+Real time usage: 0.012 seconds
+Preprocessor visited node count: 57/1000000
 Post‐expand include size: 0/2097152 bytes
 Template argument size: 0/2097152 bytes
 Highest expansion depth: 2/40
@@ -179,8 +177,8 @@ Transclusion expansion time report (%,ms,calls,template)
 100.00%    0.000      1 -total
 -->
 
-<!-- Saved in parser cache with key wikidb:pcache:idhash:371-0!canonical and timestamp 20200804052444 and revision id 5254
+<!-- Saved in parser cache with key wikidb:pcache:idhash:371-0!canonical and timestamp 20220110024857 and revision id 6003. Serialized with JSON.
  -->
 </div></div><div>
-Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=A_Cloud-init_script_that_anyone_could_launch_on_Amazon_Web_Services_(AWS)&amp;oldid=5254">https://ak20.lam1.us/A/index.php?title=A_Cloud-init_script_that_anyone_could_launch_on_Amazon_Web_Services_(AWS)&amp;oldid=5254</a>"</div>
+Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=A_Cloud-init_script_that_anyone_could_launch_on_Amazon_Web_Services_(AWS)&amp;oldid=6003">https://ak20.lam1.us/A/index.php?title=A_Cloud-init_script_that_anyone_could_launch_on_Amazon_Web_Services_(AWS)&amp;oldid=6003</a>"</div>
 <!-- end content -->

@@ -1,6 +1,6 @@
 ---
 title:  "LAMurakami datasciencecoursera Static Website"
-repos: git@github.com:LAMurakami/datasciencecoursera git@ak17:datasciencecoursera
+repos: git@github.com:LAMurakami/datasciencecoursera git@ak20:datasciencecoursera
 w_url: https://datasciencecoursera.lamurakami.com
 CNAME_target: lamurakami.github.io
 redirects: http://lamurakami.github.io/datasciencecoursera  https://lamurakami.github.io/datasciencecoursera http://datasciencecoursera.lamurakami.com

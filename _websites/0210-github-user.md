@@ -1,7 +1,7 @@
 ---
 sort_key: 02000
 title:  "LAMurakami GitHub Pages"
-repos: git@github.com:LAMurakami/lamurakami.github.io git@ak17:lamurakami.github.io
+repos: git@github.com:LAMurakami/lamurakami.github.io git@ak20:lamurakami.github.io
 w_url: https://github.lamurakami.com
 CNAME_target: lamurakami.github.io
 redirects: http://lamurakami.github.io  https://lamurakami.github.io http://github.lamurakami.com

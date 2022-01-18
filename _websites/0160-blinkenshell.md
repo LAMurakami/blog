@@ -1,6 +1,6 @@
 ---
 title:  "BlinkenShell user lam nickname The_One"
-repos: git@ak17:blinkenshell
+repos: git@ak20:blinkenshell
 w_url: http://lam.blinkenshell.org
 CNAME_target: naiad.blinkenshell.org
 redirects: http://ip.lam1.us

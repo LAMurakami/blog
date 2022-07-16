@@ -1,9 +1,9 @@
 ---
 title:  "LAMurakami datasharing Static Website"
 repos: git@github.com:LAMurakami/datasharing git@ak20:datasharing
-w_url: https://datasharing.lamurakami.com
+w_url: https://lamurakami.github.io/datasharing
 CNAME_target: lamurakami.github.io
-redirects: http://lamurakami.github.io/datasharing https://lamurakami.github.io/datasharing http://datasharing.lamurakami.com
+redirects: http://lamurakami.github.io/datasharing http://datasharing.lamurakami.com
 server: GitHub Pages
 layout: website
 ---

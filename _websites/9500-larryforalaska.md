@@ -3,7 +3,7 @@ title:  "Larry for Alaska"
 repos: git@ak20:mike
 w_url: http://larryforalaska.com
 CNAME_target: larryforalaska.duckdns.org
-aliases: http://www.larryforalaska.com http://larryforalaska.lam1.us http://larryforalaska.lamurakami.com
+aliases: http://www.larryforalaska.com http://larryforalaska.lamurakami.com
 server: LAM AWS
 layout: website
 ---

@@ -10,8 +10,8 @@ title: LAMurakami Blog
 email: GitHub-Blog@lamurakami.com
 description: > # this means to ignore newlines until "baseurl:"
   Static site published using Jekyll.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://blog.lamurakami.com" # the base hostname & protocol for your site
+baseurl: "/blog" # the subpath of your site, e.g. /blog
+url: "https://lamurakami.github.io" # the base hostname & protocol for your site
 github_username: LAMurakami
 github_repo: blog
 

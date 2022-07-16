@@ -1,6 +1,6 @@
 ---
 title:  "Larry for Alaska"
-repos: git@ak20:mike
+repos: git@github.com:LAMurakami/larryforalaska git@ak20:larryforalaska
 w_url: http://larryforalaska.com
 CNAME_target: larryforalaska.duckdns.org
 aliases: http://www.larryforalaska.com http://larryforalaska.lamurakami.com

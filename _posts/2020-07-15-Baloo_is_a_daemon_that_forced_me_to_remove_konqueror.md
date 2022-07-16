@@ -18,7 +18,7 @@ date: 2020-07-15 21:25:58 -0800
 </p><p>I removed konqueror because it was dependent upon baloo and I wanted baloo off my system so bad I was willing to give up konqueror.  I saw dolphin was also dependent on baloo but I use that even less than konqueror and could not actually remember the last time I had used either.
 </p><p>I don't think I ever had KDE installed on ak17.  The ak17 machine was bought after the Burglary when many of my machines were stolen.  I did not get around to making it my main server until the beginning of 2018 partly becasue I still had ak7 which was working.  I know I have done a major upgrade on ak17 before including from 18 to 19 as well as the smaller point releases.
 </p><p>I think I installed konqueror on ak19 just to have another browser.
-</p><p>It looks like the but has been seen by people for at least 5 years and is still there.  I did some research and question the whole philosophy intentionally limiting settings for the daemon and especially not fixing the bugs.
+</p><p>It looks like the bug has been seen by people for at least 5 years and is still there.  I did some research and question the whole philosophy intentionally limiting settings for the daemon and especially not fixing the bugs.
 </p><p>After correcting the problem by removing the horrible daemon and deleting the files I did not have room for I decided to do a little more investigating.  I looked at the backup from this morning and saw over 15G in the two files of the backup.  Those two files had over 164 million records in them and only 321 were not related to baloo.  The bulk were the following 4 messages repeated over and over.
 </p>
 <pre>org.kde.baloo.engine: PostingDB::put MDB_BAD_TXN: Transaction must abort, has a child, or is invalid
@@ -56,5 +56,5 @@ Transclusion expansion time report (%,ms,calls,template)
 <!-- Saved in parser cache with key wikidb:pcache:idhash:368-0!canonical and timestamp 20200716052233 and revision id 5180
  -->
 </div></div><div>
-Retrieved from "<a dir="ltr" href="https://ak17.lam1.us/A/index.php?title=Baloo_is_a_daemon_that_forced_me_to_remove_konqueror_after_upgrading_to_Linux_Mint_20&amp;oldid=5180">https://ak17.lam1.us/A/index.php?title=Baloo_is_a_daemon_that_forced_me_to_remove_konqueror_after_upgrading_to_Linux_Mint_20&amp;oldid=5180</a>"</div>
+Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=Baloo_is_a_daemon_that_forced_me_to_remove_konqueror_after_upgrading_to_Linux_Mint_20&amp;oldid=5180">https://ak20.lam1.us/A/index.php?title=Baloo_is_a_daemon_that_forced_me_to_remove_konqueror_after_upgrading_to_Linux_Mint_20&amp;oldid=5180</a>"</div>
 <!-- end content -->

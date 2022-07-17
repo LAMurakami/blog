@@ -21,5 +21,7 @@ collections:
      output: true
    man:
      output: true
+   a:
+     output: true
 # Build settings
 markdown: kramdown

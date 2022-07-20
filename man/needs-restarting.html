@@ -1,0 +1,76 @@
+---
+layout: page
+title: "Manpage of needs-restarting (RHEL and Amazon Linux 2)"
+---
+
+<span style="float: right;"><A HREF="#index">Index</A></span>
+<H1>needs-restarting</H1>
+Section:  (1)<BR>Updated: 13 January 2013<BR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+needs-restarting - report running processes that have been updated
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<B>needs-restarting</B> [options]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+<P>
+
+<B>needs-restarting</B> is a program that reports a list of process ids that
+started running before they or some component that they use were updated.
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>-h, --help</B><DD>
+Display a help message, and then quit.
+<DT><B>-u, --useronly</B><DD>
+Show processes for my userid only.
+<DT><B>-r, --reboothint</B><DD>
+Only report whether a full reboot is required (returns 1) or not (returns 0).
+<DT><B>-s, --services</B><DD>
+List the affected systemd services only.
+<P>
+</DL>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+<PRE>
+<I>yum.conf (5)</I>
+<A HREF="http://yum.baseurl.org/">http://yum.baseurl.org/</A>
+</PRE>
+<A NAME="lbAG">&nbsp;</A>
+<H2>AUTHORS</H2>
+
+<PRE>
+See the Authors file included with this program.
+</PRE>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">AUTHORS</A><DD>
+</DL>
+
+<br><hr>
+<a href="#top"><img border="0" src="/Public/gif.jpg/ScrollUp.gif" alt="up" />
+Top of this document
+<img border="0" src="/Public/gif.jpg/ScrollUp.gif" alt="up" /></a> -
+This page was generated with <a href="man.html">man</a>
+and <a href="man2html.html">man2html</a>.
+
+<span style="float: right;">
+Page updated Tuesday, July 19, 2022 @ 6:10:43 PM</span>

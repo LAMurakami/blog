@@ -4,14 +4,14 @@
 <ul id="menuBar" style="margin-bottom: 0px;">
 <li><a class="trigger" href="{{ site.baseurl }}/" name="top">{{ site.title }}</a></li>
 
-<li><a class="trigger" href="{{ site.baseurl }}/Sitemap.html" name="top">Posts</a>
+<li><a class="trigger" href="{{ site.baseurl }}/Posts.html" name="top">Posts</a>
   <ul>
     {% for post in site.posts %}
       <li><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
     {% endfor %}
   </ul>
 </li>
-<li><a class="trigger" href="{{ site.baseurl }}/Sitemap.html" name="top">Pages</a>
+<li><a class="trigger" href="{{ site.baseurl }}/Pages.html" name="top">Pages</a>
   <ul>
     {% for man_page in site.man %}
       <li><a href="{{ man_page.url | prepend: site.baseurl }}">{{ man_page.title }}</a></li>
@@ -33,7 +33,7 @@
   </ul>
 </li>
 
-<li><a class="trigger" href="{{ site.baseurl }}/Websites.html" name="top">Sites</a>
+<li><a class="trigger" href="{{ site.baseurl }}/websites/index.html" name="top">Sites</a>
   <ul>
     {% for website in site.websites %}
       <li><a href="{{ website.url | prepend: site.baseurl }}">{{ website.title }}</a></li>

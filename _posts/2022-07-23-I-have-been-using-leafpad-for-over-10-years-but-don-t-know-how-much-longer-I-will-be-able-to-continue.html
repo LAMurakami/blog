@@ -1,0 +1,163 @@
+---
+layout: post
+title: "I have been using leafpad for over 10 years and do not know how much longer I will be able to continue"
+date: 2022-07-23 16:11:00 -0800
+---
+
+<span style="float: right;"><a href="#toc">Contents</a></span>
+<br class="clearit">
+<!-- start content -->
+<div id="mw-content-text" class="mw-body-content mw-content-ltr" lang="en" dir="ltr"><div class="mw-parser-output"><p>
+I have been using leafpad for over 10 years but don't know how much longer I will be able to continue.
+</p><p>I created <a rel="nofollow" class="external text" href="https://github.com/LAMurakami/aws/blob/master/leafpad.1">a manpage for leafpad</a>.  I created <a rel="nofollow" class="external text" href="https://lamurakami.github.io/blog/man/leafpad.html">a html static version on my blog</a> of <a rel="nofollow" class="external text" href="http://aws.lam1.us/man/leafpad">the man page rendered by the man.gci-pl script</a> on my sites.
+</p><p>I started using leafpad when it was the default text editor on PCLinuxOS 2010.  I liked that it was lightweight and started up quickly.  At that time I was working at <a rel="nofollow" class="external text" href="http://arsc.lam1.us/About">Arctic Region Supercomputing Center (ARSC)</a> and  the Department of Defense (DoD) High Performance Computing Modernization Program (HPCMP).  By the next year I had installed it in my ~/bin on machines all over the country.  The program worked with just the executable as long as gtk2 was installed. It was a graphical text editor I could use over the internet on machines thousands of miles away.
+</p><p>Today I use in on my AWS instances,  I am usually at my home and the AWS instances are in the Oregon region but have also used it while on vacation in Cabo San Lucas over the resort wireless.
+</p><p>The leafpad page on wikipedia still says the latest stable release in 0.8.18.1 released  December 23, 2010, 11 years ago in 2022.  I found <a rel="nofollow" class="external text" href="https://github.com/tarot231/leafpad">a GitHub repo</a> where the old 0.8.18.1 version was brought in 3 years ago and a couple of patches were applied.  GTK 2 is a requirement for building and running leafpad.  GTK (formerly GIMP ToolKit) is a free and open-source cross-platform widget toolkit for creating graphical user interfaces (GUIs).
+</p><p>As of the summer of 2022 GTK 2 is still available on most machines but in general they have GTK 3 installed by default and GTK 4 is the current development version.  Besides GTK there are autoconf and make warnings from the use of depreciated features but the program still compiles. 
+</p>
+
+<h2><span class="mw-headline" id="Install_leafpad_from_git_repo">Install leafpad from git repo</span></h2>
+<h3><span class="mw-headline" id="Install_prerequisites_for_the_build">Install prerequisites for the build</span></h3>
+<p>This is the process I used in 2022 to compile leafpad on an AWS instance.  I currently launch either the latest Ubuntu Server or Amazon Linux 2 instance type.  The newest Ubuntu Server is 22.04 and I have previously built on the 20.04 and 16.04 versions.  The Amazon Linux 2 OS is like CentOS in that it is based on RHEL but does not include the RHEL service support license (or associated costs).
+</p><p>Linux Mint is based on Ubuntu so the tar archive for installation on Ubuntu can also be used on Linux Mint.
+</p>
+<h4><span class="mw-headline" id="Install_on_Ubuntu_Server_22.04">Install on Ubuntu Server 22.04</span></h4>
+<pre>sudo apt-get -y install gcc intltool libgtk2.0-dev
+</pre>
+<p>The libgtk2.0-0 package is required at runtime by leafpad compiled for Ubuntu Server 22.04.
+</p>
+<pre>dist='Ubuntu-22-04'
+</pre>
+<pre>sudo chown ubuntu:ubuntu /usr/local/src
+</pre>
+<h4><span class="mw-headline" id="Install_on_Amazon_Linux_2">Install on Amazon Linux 2</span></h4>
+<pre>sudo yum -y install gcc intltool gtk2-devel
+</pre>
+<p>The gtk2 package is required at runtime by leafpad compiled for Amazon Linux 2.
+</p>
+<pre>dist='Amazon-Linux-2'
+</pre>
+<pre>sudo chown ec2-user:ec2-user /usr/local/src
+</pre>
+<h3><span class="mw-headline" id="Clone_the_leafpad_git_repository">Clone the leafpad git repository</span></h3>
+<pre>cd /usr/local/src
+git clone git@github.com:tarot231/leafpad
+</pre>
+<pre>cd /usr/local/src/leafpad
+</pre>
+<h4><span class="mw-headline" id="We_must_build_the_.configure_file_when_we_install_from_the_git_repository.">We must build the .configure file when we install from the git repository.</span></h4>
+<pre>autoreconf --install
+</pre>
+<h4><span class="mw-headline" id="modified_INSTALL_or_README_instructions">modified INSTALL or README instructions</span></h4>
+<p>Add a temporary library prefix so we can build a tar archive that can be used to install the program and associated files.
+</p>
+<pre>./configure --prefix=/tmp/leafpad
+</pre>
+<pre>make
+</pre>
+<pre>make install
+</pre>
+<h3><span class="mw-headline" id="Create_a_tar_archive_for_install_on_instance_launch">Create a tar archive for install on instance launch</span></h3>
+<pre>cd /tmp/leafpad
+</pre>
+<h4><span class="mw-headline" id="Add_the_manpage_not_included_in_the_build">Add the manpage not included in the build</span></h4>
+<pre>mkdir -p share/man/man1
+cp /var/www/aws/leafpad.1 /tmp/leafpad/share/man/man1/
+gzip /tmp/leafpad/share/man/man1/leafpad.1
+</pre>
+<pre>tar -cvzf /mnt/efs/aws-lam1-ubuntu/leafpad-${dist}.tgz *
+</pre>
+<h3><span class="mw-headline" id="Install_the_application_and_help_page_from_the_tar_archive">Install the application and help page from the tar archive</span></h3>
+<p>The application can be installed in /usr/local to be available to all users or in ~/bin for use by that user.
+</p>
+<pre>target=/usr/local
+target=${HOME}
+</pre>
+<pre>sudo tar -xzf /mnt/efs/aws-lam1-ubuntu/leafpad-${dist}.tgz \
+--directory ${target}
+</pre>
+<p>The archive can be used to list the installed files:
+</p>
+<pre>cd ${target}
+tar -tzf /mnt/efs/aws-lam1-ubuntu/leafpad-${dist}.tgz \
+| xargs ls -ldF --time-style=long-iso
+</pre>
+<p>The tar archive built with these instructions is used in the following CloudInit user data files:
+</p>
+<ul><li><a rel="nofollow" class="external text" href="https://github.com/LAMurakami/aws/blob/master/aws-nwo-lam1-Ubuntu-CloudInit.txt">AWS EC2 instance to take over lam1 (Using Ubuntu Server 22.04 AMI)</a></li>
+<li><a rel="nofollow" class="external text" href="https://github.com/LAMurakami/aws/blob/master/aws-nwo-lam2-Amazon-Linux-2-CloudInit.txt">AWS EC2 instance to take over lam1 using the latest Amazon Linux 2 AMI</a></li></ul>
+<h2><span class="mw-headline" id="Log">Log</span></h2>
+<ul><li>Saturday, July 23, 2022 Published to: <a rel="nofollow" class="external free" href="https://lamurakami.github.io/blog/a/Install-leafpad-from-git-repo.html">https://lamurakami.github.io/blog/a/Install-leafpad-from-git-repo.html</a>
+<ul><li>Developed at: <a rel="nofollow" class="external free" href="https://ak20.lam1.us/blog/a/Install-leafpad-from-git-repo.html">https://ak20.lam1.us/blog/a/Install-leafpad-from-git-repo.html</a></li>
+<li><a rel="nofollow" class="external text" href="https://ak20.lam1.us/Comments?Submit=View;ListLength=999;Topic=Linux;Name=text%20editor;Qualifier=leafpad">Linux -- text editor --- leafpad</a></li>
+<li>Removed creation of output files for build process.</li></ul></li>
+<li>Friday, July 22, 2022 Add Ubuntu 22.04 install section
+<ul><li>Include the man page in the tar archive.</li></ul></li>
+<li>On <a rel="nofollow" class="external text" href="https://ak20.lam1.us/Zz/z22/z2207/2022-07-20/Daily-ak19.txt">Wednesday, July 20, 2022</a> I compiled a new version for use on Amazon Linux 2.</li>
+<li>6/27/2020 When I upgraded ak17 and ak16 I saw leafpad remains and still works.
+<ul><li>Based on that I decided I need to compile leafpad from source on Ubuntu 20.04 for use on Linux Mint 20 and Ubuntu 20.04 instances.  I launched a fresh lam1 instance which is now on Ubuntu 20.04 to do the compile.</li>
+<li>From my previous notes I knew I need the GNU C Compiler suite, intltool and gtk2 development.  I had to search to find the appropriate package for gtk2 development.</li>
+<li><pre>apt-cache search gtk2 | grep dev</pre></li></ul></li>
+<li>6/20/2020 Ubuntu 20.04 and Linux Mint 20 no longer include Leafpad in the default repositories.
+<ul><li>The Wikipedia Leafpad page says FeatherPad replaced Leafpad after 18.04 of Lubuntu. I also says Stable release: 0.8.18.1 / December 23, 2010; 9 years ago</li>
+<li>I decided I did not want to even try to compile this and installed FeatherPad. I then decided xed works as well.</li></ul></li>
+<li>10/16/2011 I was able to install leafpad from source on lam-ak-8, CentOS Linux release 6.0 (Final), after installing some prerequisites.</li>
+<li>2/14/2011 I have distributed the binary compiled on pacman to my ~/bin on DoD HPC machines.
+<ul><li>I note the response time from akutil in Vicksberg is noticeably slow.</li></ul></li>
+<li>12/13/2010 I compile make and install on moose a new Arctic Region Supercomputing Center academic machine.</li>
+<li>5/29/2010 leafpad is the default text editor on PCLinuxOS 2010
+<ul><li>I had in knoppix before this.</li></ul></li></ul>
+<!-- 
+NewPP limit report
+Cached time: 20220723235703
+Cache expiry: 86400
+Reduced expiry: false
+Complications: []
+CPU time usage: 0.005 seconds
+Real time usage: 0.005 seconds
+Preprocessor visited node count: 38/1000000
+Post‐expand include size: 40/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/100
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 43/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    0.000      1 -total
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:369-0!canonical and timestamp 20220723235703 and revision id 6305. Serialized with JSON.
+ -->
+</div>
+</div>
+<!-- end content -->
+<div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<div class="printfooter">Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=Leafpad_(software)&amp;oldid=6305">https://ak20.lam1.us/A/index.php?title=Leafpad_(software)&amp;oldid=6305</a>"</div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Install_leafpad_from_git_repo"><span class="tocnumber">1</span> <span class="toctext">Install leafpad from git repo</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#Install_prerequisites_for_the_build"><span class="tocnumber">1.1</span> <span class="toctext">Install prerequisites for the build</span></a>
+<ul>
+<li class="toclevel-3 tocsection-3"><a href="#Install_on_Ubuntu_Server_22.04"><span class="tocnumber">1.1.1</span> <span class="toctext">Install on Ubuntu Server 22.04</span></a></li>
+<li class="toclevel-3 tocsection-4"><a href="#Install_on_Amazon_Linux_2"><span class="tocnumber">1.1.2</span> <span class="toctext">Install on Amazon Linux 2</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-5"><a href="#Clone_the_leafpad_git_repository"><span class="tocnumber">1.2</span> <span class="toctext">Clone the leafpad git repository</span></a>
+<ul>
+<li class="toclevel-3 tocsection-6"><a href="#We_must_build_the_.configure_file_when_we_install_from_the_git_repository."><span class="tocnumber">1.2.1</span> <span class="toctext">We must build the .configure file when we install from the git repository.</span></a></li>
+<li class="toclevel-3 tocsection-7"><a href="#modified_INSTALL_or_README_instructions"><span class="tocnumber">1.2.2</span> <span class="toctext">modified INSTALL or README instructions</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-8"><a href="#Create_a_tar_archive_for_install_on_instance_launch"><span class="tocnumber">1.3</span> <span class="toctext">Create a tar archive for install on instance launch</span></a>
+<ul>
+<li class="toclevel-3 tocsection-9"><a href="#Add_the_manpage_not_included_in_the_build"><span class="tocnumber">1.3.1</span> <span class="toctext">Add the manpage not included in the build</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-10"><a href="#Install_the_application_and_help_page_from_the_tar_archive"><span class="tocnumber">1.4</span> <span class="toctext">Install the application and help page from the tar archive</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-11"><a href="#Log"><span class="tocnumber">2</span> <span class="toctext">Log</span></a></li>
+</ul>
+</div>

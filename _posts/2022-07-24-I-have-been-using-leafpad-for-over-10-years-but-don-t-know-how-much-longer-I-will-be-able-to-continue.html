@@ -1,15 +1,16 @@
 ---
 layout: post
-title: "I have been using leafpad for over 10 years and do not know how much longer I will be able to continue"
-date: 2022-07-23 16:11:00 -0800
+title: "I have been using leafpad for over 10 years but don't know how much longer I will be able to continue"
+date: 2022-07-24 14:29:00 -0800
 ---
 
 <span style="float: right;"><a href="#toc">Contents</a></span>
 <br class="clearit">
+
 <!-- start content -->
 <div id="mw-content-text" class="mw-body-content mw-content-ltr" lang="en" dir="ltr"><div class="mw-parser-output"><p>
 I have been using leafpad for over 10 years but don't know how much longer I will be able to continue.
-</p><p>I created <a rel="nofollow" class="external text" href="https://github.com/LAMurakami/aws/blob/master/leafpad.1">a manpage for leafpad</a>.  I created <a rel="nofollow" class="external text" href="https://lamurakami.github.io/blog/man/leafpad.html">a html static version on my blog</a> of <a rel="nofollow" class="external text" href="http://aws.lam1.us/man/leafpad">the man page rendered by the man.gci-pl script</a> on my sites.
+</p><p>I created <a rel="nofollow" class="external text" href="https://github.com/LAMurakami/aws/blob/master/leafpad.1">a manpage for leafpad</a>.  I created <a rel="nofollow" class="external text" href="https://lamurakami.github.io/blog/man/leafpad.html">a html static version on my blog</a> of <a rel="nofollow" class="external text" href="http://aws.lam1.us/man/leafpad">the man page rendered by the man.gci-pl script</a> on my sites.  I created a fork of leafpad, included the man page and modified the Makefile to install the man page, then created <a rel="nofollow" class="external text" href="https://github.com/tarot231/leafpad/pull/10">a pull request to incorporate this change in the original repository</a>.
 </p><p>I started using leafpad when it was the default text editor on PCLinuxOS 2010.  I liked that it was lightweight and started up quickly.  At that time I was working at <a rel="nofollow" class="external text" href="http://arsc.lam1.us/About">Arctic Region Supercomputing Center (ARSC)</a> and  the Department of Defense (DoD) High Performance Computing Modernization Program (HPCMP).  By the next year I had installed it in my ~/bin on machines all over the country.  The program worked with just the executable as long as gtk2 was installed. It was a graphical text editor I could use over the internet on machines thousands of miles away.
 </p><p>Today I use it on my AWS instances,  I am usually at my home and the AWS instances are in the Oregon region but have also used it while on vacation in Cabo San Lucas over the resort wireless.
 </p><p>The leafpad page on wikipedia still says the latest stable release is 0.8.18.1 released  December 23, 2010, 11 years ago in 2022.  I found <a rel="nofollow" class="external text" href="https://github.com/tarot231/leafpad">a GitHub repo</a> where the old 0.8.18.1 version was brought in 3 years ago and a couple of patches were applied.  GTK 2 is a requirement for building and running leafpad.  GTK (formerly GIMP ToolKit) is a free and open-source cross-platform widget toolkit for creating graphical user interfaces (GUIs).
@@ -41,9 +42,12 @@ I have been using leafpad for over 10 years but don't know how much longer I wil
 </pre>
 <h3><span class="mw-headline" id="Clone_the_leafpad_git_repository">Clone the leafpad git repository</span></h3>
 <pre>cd /usr/local/src
-git clone https://github.com/tarot231/leafpad
+git clone <a rel="nofollow" class="external free" href="https://github.com/LAMurakami/leafpad">https://github.com/LAMurakami/leafpad</a>
 </pre>
+<p>Use the LAMurakami fork and the man branch to include the man page
+</p>
 <pre>cd /usr/local/src/leafpad
+git checkout man
 </pre>
 <h4><span class="mw-headline" id="We_must_build_the_.configure_file_when_we_install_from_the_git_repository.">We must build the .configure file when we install from the git repository.</span></h4>
 <pre>autoreconf --install
@@ -60,11 +64,8 @@ git clone https://github.com/tarot231/leafpad
 <h3><span class="mw-headline" id="Create_a_tar_archive_for_install_on_instance_launch">Create a tar archive for install on instance launch</span></h3>
 <pre>cd /tmp/leafpad
 </pre>
-<h4><span class="mw-headline" id="Add_the_manpage_not_included_in_the_build">Add the manpage not included in the build</span></h4>
-<pre>mkdir -p share/man/man1
-git clone https://github.com/LAMurakami/aws /tmp/aws
-cp /tmp/aws/leafpad.1 /tmp/leafpad/share/man/man1/
-gzip /tmp/leafpad/share/man/man1/leafpad.1
+<h4><span class="mw-headline" id="Compress_the_manpage_to_match_distribution_man_pages">Compress the manpage to match distribution man pages</span></h4>
+<pre>gzip /tmp/leafpad/share/man/man1/leafpad.1
 </pre>
 <pre>tar -cvzf /mnt/efs/aws-lam1-ubuntu/leafpad-${dist}.tgz *
 </pre>
@@ -86,12 +87,15 @@ tar -tzf /mnt/efs/aws-lam1-ubuntu/leafpad-${dist}.tgz \
 <p>The tar archive built with these instructions is used in the following CloudInit user data files:
 </p>
 <ul><li><a rel="nofollow" class="external text" href="https://github.com/LAMurakami/aws/blob/master/aws-nwo-lam1-Ubuntu-CloudInit.txt">AWS EC2 instance to take over lam1 (Using Ubuntu Server 22.04 AMI)</a></li>
-<li><a rel="nofollow" class="external text" href="https://github.com/LAMurakami/aws/blob/master/aws-nwo-lam2-Amazon-Linux-2-CloudInit.txt">AWS EC2 instance to take over lam2 using the latest Amazon Linux 2 AMI</a></li></ul>
+<li><a rel="nofollow" class="external text" href="https://github.com/LAMurakami/aws/blob/master/aws-nwo-lam2-Amazon-Linux-2-CloudInit.txt">AWS EC2 instance to take over lam1 using the latest Amazon Linux 2 AMI</a></li></ul>
 <h2><span class="mw-headline" id="Log">Log</span></h2>
-<ul><li>Saturday, July 23, 2022 Published to: <a rel="nofollow" class="external free" href="https://lamurakami.github.io/blog/a/Install-leafpad-from-git-repo.html">https://lamurakami.github.io/blog/a/Install-leafpad-from-git-repo.html</a>
-<ul><li>Developed at: <a rel="nofollow" class="external free" href="https://ak20.lam1.us/blog/a/Install-leafpad-from-git-repo.html">https://ak20.lam1.us/blog/a/Install-leafpad-from-git-repo.html</a></li>
+<ul><li>Sunday, July 24, 2022 published to: <a rel="nofollow" class="external free" href="https://lamurakami.github.io/blog/2022/07/24/I-have-been-using-leafpad-for-over-10-years-but-don-t-know-how-much-longer-I-will-be-able-to-continue.html">https://lamurakami.github.io/blog/2022/07/24/I-have-been-using-leafpad-for-over-10-years-but-don-t-know-how-much-longer-I-will-be-able-to-continue.html</a></li>
+<li>Saturday, July 23, 2022 Stripped creation of build output files
+<ul><li>Published to: <a rel="nofollow" class="external free" href="https://lamurakami.github.io/blog/a/Install-leafpad-from-git-repo.html">https://lamurakami.github.io/blog/a/Install-leafpad-from-git-repo.html</a> prior to stripping creation of build output files</li>
+<li>Developed at: <a rel="nofollow" class="external free" href="https://ak20.lam1.us/blog/a/Install-leafpad-from-git-repo.html">https://ak20.lam1.us/blog/a/Install-leafpad-from-git-repo.html</a></li>
 <li><a rel="nofollow" class="external text" href="https://ak20.lam1.us/Comments?Submit=View;ListLength=999;Topic=Linux;Name=text%20editor;Qualifier=leafpad">Linux -- text editor --- leafpad</a></li>
-<li>Removed creation of output files for build process.</li></ul></li>
+<li>Removed creation of output files for build process.</li>
+<li>Created <a rel="nofollow" class="external text" href="https://github.com/tarot231/leafpad/pull/10">a pull request to incorporate the man page in the original repository</a>.</li></ul></li>
 <li>Friday, July 22, 2022 Add Ubuntu 22.04 install section
 <ul><li>Include the man page in the tar archive.</li></ul></li>
 <li>On <a rel="nofollow" class="external text" href="https://ak20.lam1.us/Zz/z22/z2207/2022-07-20/Daily-ak19.txt">Wednesday, July 20, 2022</a> I compiled a new version for use on Amazon Linux 2.</li>
@@ -110,7 +114,7 @@ tar -tzf /mnt/efs/aws-lam1-ubuntu/leafpad-${dist}.tgz \
 <ul><li>I had in knoppix before this.</li></ul></li></ul>
 <!-- 
 NewPP limit report
-Cached time: 20220723235703
+Cached time: 20220724221710
 Cache expiry: 86400
 Reduced expiry: false
 Complications: []
@@ -129,13 +133,13 @@ Transclusion expansion time report (%,ms,calls,template)
 100.00%    0.000      1 -total
 -->
 
-<!-- Saved in parser cache with key wikidb:pcache:idhash:369-0!canonical and timestamp 20220723235703 and revision id 6305. Serialized with JSON.
+<!-- Saved in parser cache with key wikidb:pcache:idhash:369-0!canonical and timestamp 20220724221710 and revision id 6309. Serialized with JSON.
  -->
 </div>
 </div>
 <!-- end content -->
 <div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
-<div class="printfooter">Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=Leafpad_(software)&amp;oldid=6305">https://ak20.lam1.us/A/index.php?title=Leafpad_(software)&amp;oldid=6305</a>"</div>
+<div class="printfooter">Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=Leafpad_(software)&amp;oldid=6309">https://ak20.lam1.us/A/index.php?title=Leafpad_(software)&amp;oldid=6309</a>"</div>
 <ul>
 <li class="toclevel-1 tocsection-1"><a href="#Install_leafpad_from_git_repo"><span class="tocnumber">1</span> <span class="toctext">Install leafpad from git repo</span></a>
 <ul>
@@ -153,7 +157,7 @@ Transclusion expansion time report (%,ms,calls,template)
 </li>
 <li class="toclevel-2 tocsection-8"><a href="#Create_a_tar_archive_for_install_on_instance_launch"><span class="tocnumber">1.3</span> <span class="toctext">Create a tar archive for install on instance launch</span></a>
 <ul>
-<li class="toclevel-3 tocsection-9"><a href="#Add_the_manpage_not_included_in_the_build"><span class="tocnumber">1.3.1</span> <span class="toctext">Add the manpage not included in the build</span></a></li>
+<li class="toclevel-3 tocsection-9"><a href="#Compress_the_manpage_to_match_distribution_man_pages"><span class="tocnumber">1.3.1</span> <span class="toctext">Compress the manpage to match distribution man pages</span></a></li>
 </ul>
 </li>
 <li class="toclevel-2 tocsection-10"><a href="#Install_the_application_and_help_page_from_the_tar_archive"><span class="tocnumber">1.4</span> <span class="toctext">Install the application and help page from the tar archive</span></a></li>
@@ -169,4 +173,4 @@ Top of this document
 <img border="0" src="/ScrollUp.gif" alt="up" /></a>
 
 <span style="float: right;">
-Page updated Saturday, July 23, 2022 @ 5:01:44 PM (Alaska Time)</span>
+Page updated Sunday, July 24, 2022 @ 2:30:14 PM (Alaska Time)</span>

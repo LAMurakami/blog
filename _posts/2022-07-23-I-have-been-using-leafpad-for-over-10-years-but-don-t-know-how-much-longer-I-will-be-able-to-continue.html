@@ -41,7 +41,7 @@ I have been using leafpad for over 10 years but don't know how much longer I wil
 </pre>
 <h3><span class="mw-headline" id="Clone_the_leafpad_git_repository">Clone the leafpad git repository</span></h3>
 <pre>cd /usr/local/src
-git clone git@github.com:tarot231/leafpad
+git clone https://github.com/tarot231/leafpad
 </pre>
 <pre>cd /usr/local/src/leafpad
 </pre>
@@ -62,7 +62,8 @@ git clone git@github.com:tarot231/leafpad
 </pre>
 <h4><span class="mw-headline" id="Add_the_manpage_not_included_in_the_build">Add the manpage not included in the build</span></h4>
 <pre>mkdir -p share/man/man1
-cp /var/www/aws/leafpad.1 /tmp/leafpad/share/man/man1/
+git clone https://github.com/LAMurakami/aws /tmp/aws
+cp /tmp/aws/leafpad.1 /tmp/leafpad/share/man/man1/
 gzip /tmp/leafpad/share/man/man1/leafpad.1
 </pre>
 <pre>tar -cvzf /mnt/efs/aws-lam1-ubuntu/leafpad-${dist}.tgz *

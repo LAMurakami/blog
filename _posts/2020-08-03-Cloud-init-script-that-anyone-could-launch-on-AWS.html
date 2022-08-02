@@ -5,42 +5,9 @@ date: 2020-08-03 21:24:00 -0800
 ---
 <!-- start content -->
 <div id="mw-content-text" lang="en" dir="ltr"><div>
-<p>I created a new <a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit</a> script that anyone could launch on Amazon Web Services (AWS).
+<p>I created a new <a rel="nofollow" href="https://github.com/LAMurakami/aws/blob/master/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit</a> script that anyone could launch on Amazon Web Services (AWS).
 </p>
-<div id="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" style="display:none" /><div lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><label for="toctogglecheckbox"></label></div>
-<ul>
-<li><a href="#A_web.2C_shell_and_proxy_server_built_from_a_Generic_Ubuntu_Server_image">1 A web, shell and proxy server built from a Generic Ubuntu Server image</a></li>
-<li><a href="#I_can_launch_from_the_command_line_with:">2 I can launch from the command line with:</a>
-<ul>
-<li><a href="#LAM_AWS_command_line_options">2.1 LAM AWS command line options</a></li>
-</ul>
-</li>
-<li><a href="#Prerequisites">3 Prerequisites</a>
-<ul>
-<li><a href="#AWS_Account">3.1 AWS Account</a></li>
-<li><a href="#Unknown_level_of_knowledge">3.2 Unknown level of knowledge</a></li>
-<li><a href="#You_can_launch_the_instance_from_the_AWS_Console">3.3 You can launch the instance from the AWS Console</a></li>
-<li><a href="#Install_awscli_and_set_credentials_to_use_the_command_line">3.4 Install awscli and set credentials to use the command line</a></li>
-</ul>
-</li>
-<li><a href="#LAM_AWS_resources">4 LAM AWS resources</a>
-<ul>
-<li><a href="#Use_a_predefined_security_group">4.1 Use a predefined security group</a></li>
-</ul>
-</li>
-<li><a href="#What_is_missing">5 What is missing</a>
-<ul>
-<li><a href="#The_instance_doesn.27t_check_in_to_a_Dynamic_Domain_Name_Service">5.1 The instance doesn't check in to a Dynamic Domain Name Service</a></li>
-<li><a href="#The_HTTPS_port_is_an_alternate_SSH_port">5.2 The HTTPS port is an alternate SSH port</a></li>
-<li><a href="#No_MediaWiki.2C_No_HTTPS_site_defined_or_modules_loaded">5.3 No MediaWiki, No HTTPS site defined or modules loaded</a></li>
-<li><a href="#No_mount_of_a_persistent_parallel_file_system">5.4 No mount of a persistent parallel file system</a></li>
-</ul>
-</li>
-<li><a href="#Why_the_lam2_instance">6 Why the lam2 instance</a></li>
-<li><a href="#This_page_was_retrieved_from_my_private_MediaWiki_instance">7 This page was retrieved from my private MediaWiki instance</a></li>
-</ul>
-</div>
-
+<span style="float: right;"><a href="#toc">Contents</a></span>
 <h2><span id="A_web,_shell_and_proxy_server_built_from_a_Generic_Ubuntu_Server_image"></span><span id="A_web.2C_shell_and_proxy_server_built_from_a_Generic_Ubuntu_Server_image">A web, shell and proxy server built from a Generic Ubuntu Server image</span></h2>
 <p>The script builds a web, shell and proxy server from the Generic Ubuntu 20.04 Server image available at no additional charge over the cost of running the EC2 instance.
 </p><p>All the source is on GitHub and the creation and storage of a custom Amazon Machine Image is not required.
@@ -50,7 +17,7 @@ date: 2020-08-03 21:24:00 -0800
 <pre>aws ec2 run-instances --count 1 --image-id ami-0892d3c7ee96c0bf7 \
 --instance-type t3.nano --security-group-ids sg-3bda0647 \
 --associate-public-ip-address --key-name aws-nwo-lam1 --user-data \
-file:///var/www/aws/<a rel="nofollow" href="http://lam2.duckdns.org/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit.txt</a>
+file:///var/www/aws/<a rel="nofollow" href="https://github.com/LAMurakami/aws/blob/master/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit.txt</a>
 </pre>
 <h3><span id="LAM_AWS_command_line_options">LAM AWS command line options</span></h3>
 <dl><dt>Launch a single ec2 instance of the t3.nano type which is cheapest or of the t2.micro type which is part of the AWS Free Tier offering.</dt>
@@ -179,6 +146,47 @@ Transclusion expansion time report (%,ms,calls,template)
 
 <!-- Saved in parser cache with key wikidb:pcache:idhash:371-0!canonical and timestamp 20220110024857 and revision id 6003. Serialized with JSON.
  -->
-</div></div><div>
-Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=A_Cloud-init_script_that_anyone_could_launch_on_Amazon_Web_Services_(AWS)&amp;oldid=6003">https://ak20.lam1.us/A/index.php?title=A_Cloud-init_script_that_anyone_could_launch_on_Amazon_Web_Services_(AWS)&amp;oldid=6003</a>"</div>
+</div></div>
 <!-- end content -->
+<div id="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" style="display:none" /><div lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><label for="toctogglecheckbox"></label></div>
+<div>
+Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=A_Cloud-init_script_that_anyone_could_launch_on_Amazon_Web_Services_(AWS)&amp;oldid=6326">https://ak20.lam1.us/A/index.php?title=A_Cloud-init_script_that_anyone_could_launch_on_Amazon_Web_Services_(AWS)&amp;oldid=6326</a>"</div>
+<ul>
+<li><a href="#A_web.2C_shell_and_proxy_server_built_from_a_Generic_Ubuntu_Server_image">1 A web, shell and proxy server built from a Generic Ubuntu Server image</a></li>
+<li><a href="#I_can_launch_from_the_command_line_with:">2 I can launch from the command line with:</a>
+<ul>
+<li><a href="#LAM_AWS_command_line_options">2.1 LAM AWS command line options</a></li>
+</ul>
+</li>
+<li><a href="#Prerequisites">3 Prerequisites</a>
+<ul>
+<li><a href="#AWS_Account">3.1 AWS Account</a></li>
+<li><a href="#Unknown_level_of_knowledge">3.2 Unknown level of knowledge</a></li>
+<li><a href="#You_can_launch_the_instance_from_the_AWS_Console">3.3 You can launch the instance from the AWS Console</a></li>
+<li><a href="#Install_awscli_and_set_credentials_to_use_the_command_line">3.4 Install awscli and set credentials to use the command line</a></li>
+</ul>
+</li>
+<li><a href="#LAM_AWS_resources">4 LAM AWS resources</a>
+<ul>
+<li><a href="#Use_a_predefined_security_group">4.1 Use a predefined security group</a></li>
+</ul>
+</li>
+<li><a href="#What_is_missing">5 What is missing</a>
+<ul>
+<li><a href="#The_instance_doesn.27t_check_in_to_a_Dynamic_Domain_Name_Service">5.1 The instance doesn't check in to a Dynamic Domain Name Service</a></li>
+<li><a href="#The_HTTPS_port_is_an_alternate_SSH_port">5.2 The HTTPS port is an alternate SSH port</a></li>
+<li><a href="#No_MediaWiki.2C_No_HTTPS_site_defined_or_modules_loaded">5.3 No MediaWiki, No HTTPS site defined or modules loaded</a></li>
+<li><a href="#No_mount_of_a_persistent_parallel_file_system">5.4 No mount of a persistent parallel file system</a></li>
+</ul>
+</li>
+<li><a href="#Why_the_lam2_instance">6 Why the lam2 instance</a></li>
+<li><a href="#This_page_was_retrieved_from_my_private_MediaWiki_instance">7 This page was retrieved from my private MediaWiki instance</a></li>
+</ul>
+</div>
+<br><hr>
+<a href="#top"><img border="0" src="/ScrollUp.gif" alt="up" />
+Top of this document
+<img border="0" src="/ScrollUp.gif" alt="up" /></a>
+
+<span style="float: right;">
+Monday, August 1, 2022 @ 4:30:37 PM (Alaska Time)</span>

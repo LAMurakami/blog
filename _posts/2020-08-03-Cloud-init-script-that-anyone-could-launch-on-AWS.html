@@ -5,17 +5,19 @@ date: 2020-08-03 21:24:00 -0800
 ---
 <!-- start content -->
 <div id="mw-content-text" lang="en" dir="ltr"><div>
-<p>I created a new <a rel="nofollow" href="https://github.com/LAMurakami/aws/blob/master/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit</a> script that anyone could launch on Amazon Web Services (AWS).
+
+<p>I created a new <a rel="nofollow" href="https://github.com/LAMurakami/aws/blob/master/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit script</a> that anyone could launch on Amazon Web Services (AWS).
 </p>
 <span style="float: right;"><a href="#toc">Contents</a></span>
-<h2><span id="A_web,_shell_and_proxy_server_built_from_a_Generic_Ubuntu_Server_image"></span><span id="A_web.2C_shell_and_proxy_server_built_from_a_Generic_Ubuntu_Server_image">A web, shell and proxy server built from a Generic Ubuntu Server image</span></h2>
+<h2><span id="A_web.2C_shell_and_proxy_server_built_from_a_Generic_Ubuntu_Server_image"></span><span id="A_web,_shell_and_proxy_server_built_from_a_Generic_Ubuntu_Server_image">A web, shell and proxy server built from a Generic Ubuntu Server image</span></h2>
 <p>The script builds a web, shell and proxy server from the Generic Ubuntu 20.04 Server image available at no additional charge over the cost of running the EC2 instance.
 </p><p>All the source is on GitHub and the creation and storage of a custom Amazon Machine Image is not required.
 </p><p>The web server is configured for three websites.  The default website would be displayed if a domain name is pointed to the IP address or domain name of the running instance.  A second website is configured if the browser gets to the site by IP address or the public-hostname assigned to the instance when it launched.  The third website is configured for some domain names I have control of.
 </p>
 <h2><span id="I_can_launch_from_the_command_line_with:">I can launch from the command line with:</span></h2>
-<pre>aws ec2 run-instances --count 1 --image-id ami-0892d3c7ee96c0bf7 \
---instance-type t3.nano --security-group-ids sg-3bda0647 \
+<pre>aws ec2 run-instances --count 1 --image-id ami-0ecc74eca1d66d8a6 \
+--instance-type t3.nano --security-group-ids sg-3bda0647 --tag-specifications \
+'ResourceType=instance,Tags=[{Key=Name,Value=aws-lam2-Ubuntu-20-04}]' \
 --associate-public-ip-address --key-name aws-nwo-lam1 --user-data \
 file:///var/www/aws/<a rel="nofollow" href="https://github.com/LAMurakami/aws/blob/master/aws-lam2-Ubuntu-CloudInit.txt">aws-lam2-Ubuntu-CloudInit.txt</a>
 </pre>
@@ -27,10 +29,10 @@ file:///var/www/aws/<a rel="nofollow" href="https://github.com/LAMurakami/aws/bl
 <dt>Use a predefined security group</dt>
 <dd>--security-group-ids sg-3bda0647</dd>
 <dt>Use the latest Ubuntu Server image</dt>
-<dd>--image-id ami-0892d3c7ee96c0bf7</dd>
+<dd>--image-id ami-0ecc74eca1d66d8a6</dd>
 <dt>Specify the file with the user data</dt>
 <dd>--user-data file://&lt;file name&gt;</dd></dl>
-<ul><li>ami-0892d3c7ee96c0bf7 This is the Ubuntu Server 20.04.3 LTS image for the US west 2 AWS region
+<ul><li>ami-0ecc74eca1d66d8a6 This is the Ubuntu Server 22.04.1 LTS image for the US west 2 AWS region
 <ul><li>If you want to run this in another region, use the appropriate image which you can find at the bottom of the Launch instance wizard page.</li></ul></li>
 <li>aws-nwo-lam1 This is my key from AWS Identity and Access Management for the IAM user I want to be able to access the instance.</li>
 <li>sg-3bda0647 This is a pre defined security group.</li>
@@ -47,7 +49,7 @@ file:///var/www/aws/<a rel="nofollow" href="https://github.com/LAMurakami/aws/bl
 </p>
 <h3><span id="You_can_launch_the_instance_from_the_AWS_Console">You can launch the instance from the AWS Console</span></h3>
 <p>You can launch the instance from the AWS Console from Services - EC2 - Instances - Launch Instance
-</p><p>As of August 2020 you have to scroll down a ways to find the Ubuntu 20.04 image with Ubuntu 18.04, Ubuntu 16.04, Amazon, RedHat, Suse and many other images listed before the relatively new Ubuntu 20.04 image.
+</p><p>As of December 2022 Ubuntu is one of OS choices along with Amazon, RedHat, Suse and many others.  For each OS several versions may be available in a drop down list.
 </p><p>You can paste the data passed as a file on the command line into the User data box in the advanced section of the Configure Instance Details page.
 </p><p>You can even configure a new security group from the launch web interface although this is step six with many previous options to launch before seeing that page.
 </p><p>I am sure an advanced user could launch one of these instances from this post.
@@ -69,7 +71,7 @@ file:///var/www/aws/<a rel="nofollow" href="https://github.com/LAMurakami/aws/bl
 <p>This security group definition allows web traffic on the standard ports from the public interface (0.0.0.0/0), Secure Shell on an alternate high numbered port and IMAPS on an alternate high numbered port.  The security group definition allows Secure Shell on the standard port.  The SSH SOCKS5 Proxy instance uses the same security group definition but is accepting Secure Shell traffic on the port that is normally used for Secure Web (HTTPS) traffic.  The security group definition does allow outgoing traffic from the server over the public interface.
 </p>
 <h2><span id="What_is_missing">What is missing</span></h2>
-<h3><span id="The_instance_doesn't_check_in_to_a_Dynamic_Domain_Name_Service"></span><span id="The_instance_doesn.27t_check_in_to_a_Dynamic_Domain_Name_Service">The instance doesn't check in to a Dynamic Domain Name Service</span></h3>
+<h3><span id="The_instance_doesn.27t_check_in_to_a_Dynamic_Domain_Name_Service"></span><span id="The_instance_doesn't_check_in_to_a_Dynamic_Domain_Name_Service">The instance doesn't check in to a Dynamic Domain Name Service</span></h3>
 <p>My main lam2 script checks in as <a rel="nofollow" href="http://lam2.duckdns.org">http://lam2.duckdns.org</a> which is one of four names that along with the aws public-hostname can be used to access the customized website.  The instance-type is also shown on the page as well as a link to the Cloud-init log.  I can use this page to toggle between the four Dynamic Domain Names I use for the group of servers I use to support the websites.
 </p><p>From another instance in the same VPC I can use Secure Copy to get the private ubuntu resource archive to the new instance over the local area network with:
 </p>
@@ -83,7 +85,7 @@ file:///var/www/aws/<a rel="nofollow" href="https://github.com/LAMurakami/aws/bl
 </p>
 <pre>DDNS_NAME=lam2
 echo url="https&#58;//www.duckdns.org/update?domains=${DDNS_NAME}&amp;token=$(cat \
-~/.duckdns)&amp;verbose=true&amp;ip=" | curl -k -K -&#160;; echo \
+~/.duckdns)&amp;verbose=true&amp;ip="| curl -k -K -; echo \
 " for ${DDNS_NAME}.duckdns.org IP address update"&#160;; echo
 </pre>
 <p>Upon successful completion the output with the verbose option will look like the following:
@@ -105,7 +107,7 @@ UPDATED for lam2.duckdns.org IP address update
 <p>The main function of this AWS EC2 instance is to be a SSH SOCKS5 Proxy server on port 443.
 </p><p>Port 443 is normally used for HTTPS so is likely to be available even when other ports are blocked.
 </p>
-<h3><span id="No_MediaWiki,_No_HTTPS_site_defined_or_modules_loaded"></span><span id="No_MediaWiki.2C_No_HTTPS_site_defined_or_modules_loaded">No MediaWiki, No HTTPS site defined or modules loaded</span></h3>
+<h3><span id="No_MediaWiki.2C_No_HTTPS_site_defined_or_modules_loaded"></span><span id="No_MediaWiki,_No_HTTPS_site_defined_or_modules_loaded">No MediaWiki, No HTTPS site defined or modules loaded</span></h3>
 <p>My main lam1 Cloud-init script has the HTTPS site definition in a private repository.
 </p>
 <h3><span id="No_mount_of_a_persistent_parallel_file_system">No mount of a persistent parallel file system</span></h3>
@@ -114,27 +116,36 @@ UPDATED for lam2.duckdns.org IP address update
 <h2><span id="Why_the_lam2_instance">Why the lam2 instance</span></h2>
 <p>The lam2 instance was a candidate to be modified so that anyone could launch it precisely because it did not have html/Private, MediaWiki or the databases that I only support on HTTPS.
 </p><p>I have had an AWS VPC since 2017 but early on added the private EFS and private S3 buckets as a source for initializing.
-</p><p>This year I finally switched to git as my main VCS and decided to publish repos that did not need to remain private to GidHub because of it's value for documentation.  Once I had published the <a rel="nofollow" href="https://github.com/LAMurakami/aws#readme">aws</a> Linux Apache MariaDB in the cloud,
+</p><p>In 2020 I finally switched to git as my main VCS and decided to publish repos that did not need to remain private to GidHub because of it's value for documentation.  Once I had published the <a rel="nofollow" href="https://github.com/LAMurakami/aws#readme">aws</a> Linux Apache MariaDB in the cloud,
 <a rel="nofollow" href="https://github.com/LAMurakami/no-ssl#readme">no-ssl</a> Default unsecure site configuration
 and
 <a rel="nofollow" href="https://github.com/LAMurakami/arsc#readme">arsc</a> Lawrence A. Murakami at ARSC
 repos to GitHub I realized I could launch the lam2 instance using only publicly available sources for the initialization.
 </p>
+<h2><span id="The_CloudInit_file_is_a_YAML_data_file">The CloudInit file is a YAML data file</span></h2>
+<p>Technically the CloudInit file is not a script but a <a rel="nofollow" href="https://en.wikipedia.org/wiki/YAML">YAML</a> data file.  The data file contains a runcmd section with an array of commands that run sequentially and this is the bulk of my CloudInit files.  The sequential sequence of commands section is in my mind the same as a script.  The individual commands have to fit within the yaml rules which can introduce complexities such as when colons are needed in a command or it's arguments.  The bootcmd section is also a sequential sequence of commands section that runs earlier in the initial boot and is run again on subsequent boots.  The packages section is a list of packages to be installed during the initialization that happens after the bootcmd and before the runcmd sections.  Some packages are installed by commands in the runcmd section to control timing.
+</p>
 <h2><span id="This_page_was_retrieved_from_my_private_MediaWiki_instance">This page was retrieved from my private MediaWiki instance</span></h2>
 <p>Most of the pages I end up publishing to the web are a Static Copy of a page in my private MediaWiki instance.  In this case I use view source and copy the parts from to From: &lt;!-- start content --&gt; To: &lt;!-- end content --&gt; to a file and add Front Matter for Jekyll that will build the page to be published on GitHub Pages.
 </p>
+<h2><span id="Log">Log</span></h2>
+<ul><li>Sunday, December 11, 2022 Update for Ubuntu 22.04
+<ul><li>The glances application was problematic for initial versions of Ubuntu 22.04 and was removed from the packages section so that the instance could start.</li>
+<li>The glances application can be installed without problem after upgrade to Ubuntu 22.04.1</li>
+<li>The which, leafpad and commands compiled for Ubuntu 20.04 still work with Ubuntu 22.04</li></ul></li>
+<li>August 4, 2020‎ Created this page using an Ubuntu 20.04 Amazon Machine Image (AMI)</li></ul>
 <!-- 
 NewPP limit report
-Cached time: 20220110024857
+Cached time: 20221212040337
 Cache expiry: 86400
-Dynamic content: false
+Reduced expiry: false
 Complications: []
-CPU time usage: 0.011 seconds
-Real time usage: 0.012 seconds
-Preprocessor visited node count: 57/1000000
+CPU time usage: 0.007 seconds
+Real time usage: 0.008 seconds
+Preprocessor visited node count: 64/1000000
 Post‐expand include size: 0/2097152 bytes
 Template argument size: 0/2097152 bytes
-Highest expansion depth: 2/40
+Highest expansion depth: 2/100
 Expensive parser function count: 0/100
 Unstrip recursion depth: 0/20
 Unstrip post‐expand size: 0/5000000 bytes
@@ -144,15 +155,15 @@ Transclusion expansion time report (%,ms,calls,template)
 100.00%    0.000      1 -total
 -->
 
-<!-- Saved in parser cache with key wikidb:pcache:idhash:371-0!canonical and timestamp 20220110024857 and revision id 6003. Serialized with JSON.
+<!-- Saved in parser cache with key wikidb:pcache:idhash:371-0!canonical and timestamp 20221212040337 and revision id 6544. Serialized with JSON.
  -->
-</div></div>
+</div>
+</div>
 <!-- end content -->
 <div id="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" style="display:none" /><div lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><label for="toctogglecheckbox"></label></div>
-<div>
-Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=A_Cloud-init_script_that_anyone_could_launch_on_Amazon_Web_Services_(AWS)&amp;oldid=6326">https://ak20.lam1.us/A/index.php?title=A_Cloud-init_script_that_anyone_could_launch_on_Amazon_Web_Services_(AWS)&amp;oldid=6326</a>"</div>
+<div>Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=A_Cloud-init_script_that_anyone_could_launch_on_Amazon_Web_Services_(AWS)&amp;oldid=6544">https://ak20.lam1.us/A/index.php?title=A_Cloud-init_script_that_anyone_could_launch_on_Amazon_Web_Services_(AWS)&amp;oldid=6544</a>"</div>
 <ul>
-<li><a href="#A_web.2C_shell_and_proxy_server_built_from_a_Generic_Ubuntu_Server_image">1 A web, shell and proxy server built from a Generic Ubuntu Server image</a></li>
+<li><a href="#A_web,_shell_and_proxy_server_built_from_a_Generic_Ubuntu_Server_image">1 A web, shell and proxy server built from a Generic Ubuntu Server image</a></li>
 <li><a href="#I_can_launch_from_the_command_line_with:">2 I can launch from the command line with:</a>
 <ul>
 <li><a href="#LAM_AWS_command_line_options">2.1 LAM AWS command line options</a></li>
@@ -173,14 +184,16 @@ Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=A_Clou
 </li>
 <li><a href="#What_is_missing">5 What is missing</a>
 <ul>
-<li><a href="#The_instance_doesn.27t_check_in_to_a_Dynamic_Domain_Name_Service">5.1 The instance doesn't check in to a Dynamic Domain Name Service</a></li>
+<li><a href="#The_instance_doesn&#39;t_check_in_to_a_Dynamic_Domain_Name_Service">5.1 The instance doesn't check in to a Dynamic Domain Name Service</a></li>
 <li><a href="#The_HTTPS_port_is_an_alternate_SSH_port">5.2 The HTTPS port is an alternate SSH port</a></li>
-<li><a href="#No_MediaWiki.2C_No_HTTPS_site_defined_or_modules_loaded">5.3 No MediaWiki, No HTTPS site defined or modules loaded</a></li>
+<li><a href="#No_MediaWiki,_No_HTTPS_site_defined_or_modules_loaded">5.3 No MediaWiki, No HTTPS site defined or modules loaded</a></li>
 <li><a href="#No_mount_of_a_persistent_parallel_file_system">5.4 No mount of a persistent parallel file system</a></li>
 </ul>
 </li>
 <li><a href="#Why_the_lam2_instance">6 Why the lam2 instance</a></li>
-<li><a href="#This_page_was_retrieved_from_my_private_MediaWiki_instance">7 This page was retrieved from my private MediaWiki instance</a></li>
+<li><a href="#The_CloudInit_file_is_a_YAML_data_file">7 The CloudInit file is a YAML data file</a></li>
+<li><a href="#This_page_was_retrieved_from_my_private_MediaWiki_instance">8 This page was retrieved from my private MediaWiki instance</a></li>
+<li><a href="#Log">9 Log</a></li>
 </ul>
 </div>
 <br><hr>
@@ -189,4 +202,4 @@ Top of this document
 <img border="0" src="/ScrollUp.gif" alt="up" /></a>
 
 <span style="float: right;">
-Monday, August 1, 2022 @ 4:30:37 PM (Alaska Time)</span>
+Sunday, December 11, 2022 @ 8:49:58 PM (Alaska Time)</span>

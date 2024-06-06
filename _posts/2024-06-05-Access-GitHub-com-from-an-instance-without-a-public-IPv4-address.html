@@ -1,0 +1,166 @@
+---
+layout: page
+title: "Access GitHub.com from an instance without a public IPv4 address"
+---
+<span style="float: right;"><a href="#toc">Contents</a></span>
+<!-- start content -->
+<div id="mw-content-text" lang="en" dir="ltr"><div><p><br />
+Since 2023 when AWS announced it would begin charging for a public IPv4 address I have been investigating eliminating the need for a public IPv4 address.  It was relatively easy to move from an IPv4 only was ec2 instance to a dual stack instance that can communicate via both IPv4 and IPv6.  I also quickly determined that I would not be able to completely eliminate the need for a public IPv4 address for the foreseeable future.  With the IPv6 only workarounds I am able to reduce the need for a public IPv4 address as long as I have access to an instance or server with dual stack IPv4 and IPv6 access.
+</p><p>I had already been using the aws instance for proxy access to the internet and immediately found that the ssh proxy I was already using gave me access to both IPv4 and IPv6 servers from a machine that did not have a public IPv6 address.
+</p><p>In 2024 while working on IPv6 only workarounds I found that the ssh tunneling solutions I had been using as early as 2018 to allow me to get around resort or hotel internet access restrictions could be utilized to allow an aws instance without a public IPv4 address to access both github and ak20 which only support IPv4 access.
+</p>
+
+<h2><span id="This_IPv6_only_workaround_makes_use_of_ssh_to_aws_connectivity">This IPv6 only workaround makes use of ssh to aws connectivity</span></h2>
+<p>This IPv6 only workaround makes use of ssh to aws connectivity and requires the aws.lam1.us instance to be up.  I have run an aws.lam1.us instance 24/7 since 2017 and it has been a dual stack instance capable of both IPv4 and IPv6 communications since 2023.
+</p><p>This is my fifth IPv6 only workaround the first four of which were designed to be used by the cloud init process.  This workaround is designed to facilitate interactive activity after the instance is up.  So far all the IPv6 only workarounds use the ssh to aws connectivity except in the cases where the instance is in the us-west-2 Oregon region and can access the git repository store, tar archives, db archives and such from the aws-efs directly.
+</p><p>It was created primarily so that I can work with git repos using fetch, push and pull commands from both the github and ak20 git repository stores with minimal latency.  The ak20-aws-gateway and ak20 enties also enable me to implement backups to ak20 or refresh operations from ak20 from an instance without a public IPv4 address using the ssh to aws connectivity.
+</p><p>The ssh to aws connectivity is implemented with private keys in the user bash resources installed from the aws-efs for the region as well as known_host entries and more from the <a rel="nofollow" href="https://lamurakami.github.io/aws-efs">LAM aws-efs metadata directory</a> all installed during initialization by cloud init when a new instance is launched.
+</p><p>This IPv6 only workaround works for git when git uses standard ssh protocols.  This solution does not work for git over the https protocol.  The <a rel="nofollow" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh">Connecting to GitHub with SSH</a> documentation should help with with setting up access to GitHub with ssh.
+</p>
+<h2><span id="Enable_github_and_ak20_remotes_using_aws-gateway_access_on_instance_without_public_IPv4_access">Enable github and ak20 remotes using aws-gateway access on instance without public IPv4 access</span></h2>
+<h3><span id=".ssh.2Fconfig_entries_for_aws-gateway_access_to_ak20_and_github"></span><span id=".ssh/config_entries_for_aws-gateway_access_to_ak20_and_github">.ssh/config entries for aws-gateway access to ak20 and github</span></h3>
+<p>Using two local ssh aws-gateway processes implementing a LocalForward via aws.lam1.us and the .ssh/config entries for those processes and the host entries specifying the port for the process I was able to get a repo connected to both github and ak20, the main repo stores, from an instance without a public IPv4 address.  Like other IPv6 only workarounds this requires ssh connectivity to the aws.lam1.us instance that has a dual stack and supports both IPv4 and IPv6 connections.
+</p><p>All these entries are added to .ssh/config for the user on the machine needing the aws-gateway access.
+</p>
+<pre>Host ak20-aws-gateway
+LocalForward 59222 ak20.lam1.us:55520
+Port 55520
+Hostname aws.lam1.us
+</pre>
+<pre>Host ak20 ak20.lam1.us
+Port 59222
+Hostname localhost
+</pre>
+<pre>Host github-aws-gateway
+LocalForward 58222 github.com:22
+Port 55520
+Hostname aws.lam1.us
+</pre>
+<pre>Host github.com
+Port 58222
+Hostname localhost
+</pre>
+<p>This entry overrides the DNS entries for access to github.com to use the localhost port and the aws-gateway process forwarding through aws.lam1.com that has dual stack IPv4 and IPv6 connectivity allowing an instance without a public IPv4 address to access a host only acessible via IPv4.
+</p>
+<h3><span id="Start_aws-gateway_processes">Start aws-gateway processes</span></h3>
+<pre>ssh -f -C2qTnN ak20-aws-gateway
+ssh -f -C2qTnN github-aws-gateway
+</pre>
+<p>Each of the above commands starts a process on the localhost that tunnels through the aws gateway via a localhost port that the .ssh/config entry uses when the gateway hostname is specified.
+</p>
+<h3><span id="Test_access">Test access</span></h3>
+<pre>ssh ak20
+ssh -T git@github.com
+</pre>
+<p>The .ssh/config file entries direct ssh to use the tunnel process previously started using the aws-gateway .ssh/config entries.
+</p><p>Without the .ssh/config file entries an instance without a public IPv4 address gets a "Connection timed out" error after what could be a couple of minutes or more depending on configuration.
+</p>
+<h3><span id="Update_git_remote_entries_to_use_.ssh.2Fconfig_host_names"></span><span id="Update_git_remote_entries_to_use_.ssh/config_host_names">Update git remote entries to use .ssh/config host names</span></h3>
+<pre>REPO=aws # no-ssl
+REPO=lam # Private reps not on github
+cd /var/www/${REPO}
+git remote set-url origin git@ak20:${REPO}
+git remote add github git@github.com:LAMurakami/${REPO} # For public repos only
+</pre>
+<p>The github.com entry is the same as would work on an instance with a public IPv4 address without the .ssh/config entries and ssh processes.
+</p>
+<h2><span id="Enable_SOCKS5_ssh_proxy">Enable SOCKS5 ssh proxy</span></h2>
+<p>I have been using a SOCKS5 ssh proxy for more than a decade since 2012 or earlier.  The SOCKS5 ssh proxy gives me some of the advantages of a VPN using a tunnel process on the localhost connected to a ssh server instead of a VPN client.
+</p><p>In 2023 I discovered that this process gives a host with only IPv4 or IPv6 access dual stack IP access with no change other than the proxy server used haveing dual stack IP access.
+</p><p>See Also: <a rel="nofollow" href="http://arsc.lam1.us/SSH_SOCKS5_Proxy">http://arsc.lam1.us/SSH_SOCKS5_Proxy</a>
+</p>
+<h3><span id="alias_entries_for_starting_and_reporting_on_a_SOCKS5_ssh_proxy">alias entries for starting and reporting on a SOCKS5 ssh proxy</span></h3>
+<pre>alias sp='ssh -f -C2qTnN -D 1080'
+</pre>
+<p>This starts a process on the localhost that tunnels through the specified gateway via a localhost port that the .ssh/config entry uses when the gateway hostname is specified.
+</p>
+<pre>alias rp="ps -ef | grep 'ssh -f' | grep -v grep"
+</pre>
+<h3><span id="Start_SOCKS5_ssh_proxy">Start SOCKS5 ssh proxy</span></h3>
+<pre>sp aws # or ak20 or any sever with ssh access that allows tunneling
+</pre>
+<p>I have been typing "sp aws" since as early as 2017 and "sp alpha" since as early as 2012 to start the process on the localhost that supports the use of a SOCKS5 ssh proxy.  I have also used "sp ak20" or earlier LAM Alaska LAN servers for proxy access that allows me to see all the machines on the LAM Alaska LAN using Firefox and it's proxy configuration capabilities.
+</p>
+<h2><span id="Report_SOCKS5_ssh_proxy_and_ssh_tunnel_processes">Report SOCKS5 ssh proxy and ssh tunnel processes</span></h2>
+<pre>rp # ps -ef | grep 'ssh -f' | grep -v grep
+</pre>
+<h2><span id="Requirements">Requirements</span></h2>
+<p>This workaround requires ssh connectivity to a dual stack host with both IPv4 and IPv6 public addresses.  That ssh connectivity must include the ability to do SSH Tunneling (Port Forwarding).  Local port forwarding is often used to connect to a remote service on an internal network and could be blocked or restricted by the server administrators.  A non privileged user can use ports greater than 1024 as a LOCAL_PORT.  In this case we will use the ssh local port forwarding to bridge to an IPv4 only server from an IPv6 only instance using an intermediate dual stack server.
+</p><p>The AllowTcpForwarding option in the OpenSSH server configuration file must be enabled on the server to allow port forwarding.
+</p>
+<h2><span id="Pros_and_Cons">Pros and Cons</span></h2>
+<h3><span id="Pros">Pros</span></h3>
+<ul><li>Only one port is required for a SOCKS 5 ssh proxy that can be used by Firefox as a proxy for all communication with the internet.</li>
+<li>A target server that was otherwise unaccessble can now be accessed with this workaround as long as access is via standard ssh protocols.</li>
+<li>There are a lot of ports available.</li></ul>
+<h3><span id="Cons">Cons</span></h3>
+<ul><li>A dedicated port, process and configuration settings are required for each target server to be directly addressed with this workaround.</li></ul>
+<h2><span id="About_this_page">About this page</span></h2>
+<p>This page was created to document using aws-gateway tunnels and .ssh.config host entries as an IPv6 only workaround.
+</p><p>This page was created as a How To for myself and includes cut and paste sections that can be used to implement and use what is documented.  It does reference the <a rel="nofollow" href="http://arsc.lam1.us/SSH_SOCKS5_Proxy">SSH SOCKS5 Proxy</a> page created more than a decade ago that documents options used in the SSH command, Firefox proxy configuration and more but assumes the reader has a pretty good knowledge of Linux, SSH, IP communications, and more or will be able to gain that knowledge from other sources.
+</p><p>I do believe this page has information that could help others so publishing the page might help but they would have to be able to find the page and have sufficient knowledge and understanding to use it in their situation.
+</p><p>My case is very specific.  I am using this workaround along with others to limit the number of public IPv4 addresses I have to pay AWS for at about $43.80 per Year to one except for testing.  My calculations and estimates have AWS making hundreds of millions per year charging for the public IPv4 addresses they already have.
+</p>
+<h2><span id="Log">Log</span></h2>
+<ul><li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z24/z2406/2024-06-05/Daily-ak19.txt">Wednesday, June 5, 2024</a> I setup ak20-aws-gateway on lam3 like ak17-aws-gateway on ak19.
+<ul><li>I used the <a href="/a/Port_Forwarding#Setup_and_use_a_ssh_tunnel_to_ak17_via_aws_or_lam2_as_a_gateway" title="Port Forwarding">Port Forwarding#Setup and use a ssh tunnel to ak17 via aws or lam2 as a gateway</a> documentation from 2018.</li>
+<li>I did not need ak17-lam2-gateway which used the 443 alternate port for ssh on a lam2 instance which allowed me to get out of a Resort or Hotel LAN that was blocking ssh on the standard port of 22.  I haven't had to utilize this for years since the resorts I visit have stopped trying to block port 22 ssh connections.</li>
+<li>Added documentation on SOCKS5 ssh proxy process I have been using since 2012 or earlier.
+<ul><li>I was officially allowed to use the SOCKS5 ssh proxy process to access DoD HPCMP resources when working at home for ARSC after documenting it and requesting it's authorization.  At the time the DoD HPCMP provided proxy or VPN services but access was tailored to Windows users and Linux workstation users were not well supported.</li></ul></li></ul></li></ul>
+<!-- 
+NewPP limit report
+Cached time: 20240606055148
+Cache expiry: 86400
+Reduced expiry: false
+Complications: [show‐toc]
+CPU time usage: 0.005 seconds
+Real time usage: 0.005 seconds
+Preprocessor visited node count: 50/1000000
+Post‐expand include size: 20/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/100
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    0.000      1 -total
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:506-0!canonical and timestamp 20240606055148 and revision id 7744. Rendering was triggered because: edit-page
+ -->
+</div>
+</div>
+<!-- end content -->
+<div id="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" style="display:none" /><div lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><label for="toctogglecheckbox"></label></div>
+<div data-nosnippet="">Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=Using_-gateway_.ssh/config_host_entries_as_an_IPv6_only_workaround&amp;oldid=7744">https://ak20.lam1.us/A/index.php?title=Using_-gateway_.ssh/config_host_entries_as_an_IPv6_only_workaround&amp;oldid=7744</a>"</div>
+<ul>
+<li><a href="#This_IPv6_only_workaround_makes_use_of_ssh_to_aws_connectivity">1 This IPv6 only workaround makes use of ssh to aws connectivity</a></li>
+<li><a href="#Enable_github_and_ak20_remotes_using_aws-gateway_access_on_instance_without_public_IPv4_access">2 Enable github and ak20 remotes using aws-gateway access on instance without public IPv4 access</a>
+<ul>
+<li><a href="#.ssh/config_entries_for_aws-gateway_access_to_ak20_and_github">2.1 .ssh/config entries for aws-gateway access to ak20 and github</a></li>
+<li><a href="#Start_aws-gateway_processes">2.2 Start aws-gateway processes</a></li>
+<li><a href="#Test_access">2.3 Test access</a></li>
+<li><a href="#Update_git_remote_entries_to_use_.ssh/config_host_names">2.4 Update git remote entries to use .ssh/config host names</a></li>
+</ul>
+</li>
+<li><a href="#Enable_SOCKS5_ssh_proxy">3 Enable SOCKS5 ssh proxy</a>
+<ul>
+<li><a href="#alias_entries_for_starting_and_reporting_on_a_SOCKS5_ssh_proxy">3.1 alias entries for starting and reporting on a SOCKS5 ssh proxy</a></li>
+<li><a href="#Start_SOCKS5_ssh_proxy">3.2 Start SOCKS5 ssh proxy</a></li>
+</ul>
+</li>
+<li><a href="#Report_SOCKS5_ssh_proxy_and_ssh_tunnel_processes">4 Report SOCKS5 ssh proxy and ssh tunnel processes</a></li>
+<li><a href="#Requirements">5 Requirements</a></li>
+<li><a href="#Pros_and_Cons">6 Pros and Cons</a>
+<ul>
+<li><a href="#Pros">6.1 Pros</a></li>
+<li><a href="#Cons">6.2 Cons</a></li>
+</ul>
+</li>
+<li><a href="#About_this_page">7 About this page</a></li>
+<li><a href="#Log">8 Log</a></li>
+</ul>
+</div>
+</body></html>

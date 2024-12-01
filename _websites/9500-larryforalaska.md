@@ -1,9 +1,9 @@
 ---
 title:  "Larry for Alaska"
 repos: git@github.com:LAMurakami/larryforalaska git@ak20:larryforalaska
-w_url: http://larryforalaska.com
+w_url: https://larryforalaska.com
 CNAME_target: larryforalaska.duckdns.org
-aliases: http://www.larryforalaska.com http://larryforalaska.lamurakami.com
+aliases: https://www.larryforalaska.com https://larryforalaska.lamurakami.com
 server: LAM AWS
 layout: website
 ---

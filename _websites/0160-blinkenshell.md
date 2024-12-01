@@ -1,11 +1,11 @@
 ---
 title:  "BlinkenShell user lam nickname The_One"
 repos: git@ak20:blinkenshell
-w_url: http://lam.blinkenshell.org
+w_url: https://lam.blinkenshell.org
 CNAME_target: naiad.blinkenshell.org
 redirects: http://ip.lam1.us
 clones: http://blinkenshell.lam1.us
-aliases: http://blinkenshell.lamurakami.com http://blinkenshell.larrymurakami.com http://blinkenshell.larryforalaska.com
+aliases: https://blinkenshell.lamurakami.com https://blinkenshell.larrymurakami.com https://blinkenshell.larryforalaska.com
 server: blinkenshell.org
 layout: website
 ---

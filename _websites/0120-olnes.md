@@ -1,9 +1,9 @@
 ---
 title:  "Olnes West Subdivision, Alaska"
 repos: git@ak20:cabo
-w_url: http://olnes.lam1.us
+w_url: https://olnes.lam1.us
 CNAME_target: lam1.duckdns.org
-aliases: http://olnes.lamurakami.com http://olnes.larrymurakami.com http://olnes.larryforalaska.com
+aliases: https://olnes.lamurakami.com https://olnes.larrymurakami.com https://olnes.larryforalaska.com
 server: LAM AWS
 layout: website
 ---

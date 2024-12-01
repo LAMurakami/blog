@@ -1,9 +1,9 @@
 ---
 title:  "LAM Sites in the cloud and at home in Alaska."
 repos: git@ak20:sites
-w_url: http://sites.lam1.us
+w_url: https://sites.lam1.us
 CNAME_target: lam1.duckdns.org
-aliases: http://sites.lamurakami.com
+aliases: https://sites.lamurakami.com https://sites.larrymurakami.com  https://sites.larryforalaska.com
 server: LAM AWS
 layout: website
 ---

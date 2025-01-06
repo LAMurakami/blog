@@ -1,9 +1,9 @@
 ---
 w_url: http://aws.lam1.us
-clones: http://lam1.lam1.us http://lam2.lam1.us http://ak20.lam1.us http://ak19.lam1.us http://a17.lam1.us http://ak7.lam1.us
+clones: http://lam1.lam1.us http://lam2.lam1.us http://ak20.lam1.us http://ak19.lam1.us http://a24.lam1.us http://ak23.lam1.us
 aliases: http://www.lam1.us http://www.lamurakami.com http://www.larrymurakami.com
 redirects: http://lam1.us http://lamurakami.com http://larrymurakami.com
-repos: git@github.com:LAMurakami/aws git@ak20:no-ssl
+repos: git@gitlab.com:aws-lam/no-ssl git@github.com:LAMurakami/no-ssl git@aws:no-ssl
 layout: website
 title: "LAM AWS - Linux Apache MariaDB in the cloud."
 CNAME_target: lamurakami.duckdns.org

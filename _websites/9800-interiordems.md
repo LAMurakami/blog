@@ -1,6 +1,6 @@
 ---
 title:  "Interior Democrats of Alaska"
-repos: git@ak20:interiordems
+repos: git@aws:interiordems
 w_url: http://interiordems.lam1.us
 CNAME_target: larryforalaska.duckdns.org
 server: LAM AWS

@@ -1,6 +1,6 @@
 ---
 title:  "Alaska Democrat"
-repos: git@ak20:alaskademocrat
+repos: git@aws:alaskademocrat
 w_url: http://alaskademocrat.lam1.us
 CNAME_target: larryforalaska.duckdns.org
 server: LAM AWS

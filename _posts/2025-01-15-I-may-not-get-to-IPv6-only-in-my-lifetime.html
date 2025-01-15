@@ -1,0 +1,183 @@
+---
+layout: post
+title: "I may not get to IPv6 only in my lifetime"
+date: 2025-01-15 01:34:59 -0800
+---
+<span style="float: right;"><a href="#toc">Contents</a></span>
+
+<!-- start content -->
+<div id="mw-content-text"><div lang="en" dir="ltr">
+
+<h2><span id="Dual_stack_.28IPv4_and_IPv6.29_for_the_foreseeable_future"></span><span id="Dual_stack_(IPv4_and_IPv6)_for_the_foreseeable_future">Dual stack (IPv4 and IPv6) for the foreseeable future</span></h2>
+<p>My indefinite intermediate step in the process to move from IPv4 to IPv6 is to have aws.lam1.us be a dual stack ssh server.
+</p><p>My <a rel="nofollow" href="http://aws.lam1.us/About">main LAM AWS instance</a> is a Dual stack (IPv4 and IPv6) web server, ssh proxy and ssh tunnel server.  This main instance is currently required for a number of IPv6 workarounds I use to initialize an instance without a public IPv4 address.  It is also used as an ssh proxy by my laptop, which currently does not have a public IPv6 address, for access to servers with only IPv6 connectivity.
+</p><p>If launched with the Public IPv4 address option a lam1 instance can be used as the main LAM AWS instance.  To support the IPv6 only workarounds the instance must currently be in the us-west-2 Oregon region where the aws-efs is fully populated.
+</p>
+<h2><span id="AWS_charges_for_a_Public_IPv4_address">AWS charges for a Public IPv4 address</span></h2>
+<p>Amazon Web Services (AWS) increased the price to run a minimal LAMP web server by over 133% starting February of 2024.
+</p>
+<ul><li>$17.00 / year - AWS EC2 nano instance 3 year prepaid</li>
+<li><b>$43.80 / year - Public IPv4 Address ($0.005 / Hour = $0.12 / Day ~= $3.60 / Month)</b></li>
+<li>$9.60 / year - 8GB AWS EBS root volume for AWS EC2 instance</li>
+<li>$4.80 / year - 1GB EFS accessible by all AWS LAM VPC EC2 instances in the region</li>
+<li>$1.44 / year - Data transfer</li></ul>
+<p>$76.64 is a 133% increase over the $32.84 annual cost of a minimal AWS LAMP instance
+</p><p>In 2024 I created the <a href="/a/Modify_AWS_VPC_for_IPv6" title="Modify AWS VPC for IPv6">Modify AWS VPC for IPv6</a> page and by Saturday, February 17, 2024 I completed modifying the first 29 AWS VPCs for IPv6.  In January of 2025 I can launch an instance with a public IPv6 address in 31 AWS regions. The default is into an availability zone that also has a Private IPv4 subnet that is used to access the EFS for the region. I can opt to have a Public IPv4 address which is implemented at the NAT.
+</p>
+<h2><span id="AWS_LAM_VPC_history">AWS LAM VPC history</span></h2>
+<p>I started running an EC2 instance in 2017 after my house was burgled.
+</p><p>For the first year I tested that the Free Tier could run a clone of my web server in the cloud and found the t2.micro which was part of the Free Tier more than capable to run a minimal LAMP web server.
+</p><p>After the Free Tier initial 12 months expired I tested a nano instance and found that it to was capable of running a minimal LAMP web server.  I purchased a EC2 t3.nano Reserved Instance for $51 Up Front for $28.55 / Year savings over the on demand price.  This $17.00 / year up front cost needed an additional $0.80 for EBS, $0.25 for Bandwidth, $0.04 for EFS each month bringing my effective monthly price to just under $4.00 / month.
+</p><p>In 2021 I added an additional 40G EBS volume adding an additional $4.00 / month growing to 48G or $4.80 / month by 2023.
+</p><p>Increasing EFS and S3 including snapshot storage brought the monthly cost to $12.00 / month by the end of 2023.
+</p><p>In 2023 I began using ARM as well as x86 instances on AWS and began using x86 instances using QEMU.  I switched from a public IPv4 only default for a new instance on AWS to a dual stack instance that always has an IPv6 public address and optionally can have a public IPv4 address as well.  In 2024 I expanded the dual stack default with new instances always getting a public IPv6 address from the AWS LAM VPC in the us-west-2 Oregon region to the AWS LAM VPC in all 29 AWS regions.
+</p><p>The <a rel="nofollow" href="https://gitlab.com/aws-lam/aws/-/blob/master/aws-efs-mount.bash?ref_type=heads">aws-efs-mount.bash</a> program has the AWS EFS filesystem name for the LAM VPC in each of the regions and mounts the appropriate filesystem with NFS.  Each of these filesystems was populated with the LAM bash user resources archive files.  The LAM bash user resources include credentials that can be used with ssh to access the main aws instance and other systems.
+</p><p>For AWS instances launched without a public IPv4 address the aws instance in the us-west-2 Oregon region must be up to support a number of IPv6 only workarounds.  Some of the workarounds are not required if the instance is being launched in the us-west-2 Oregon region.
+</p>
+<h2><span id="IPv6_only_EC2_instances_vs_dual_stack_instances_with_no_public_IPv4_address">IPv6 only EC2 instances vs dual stack instances with no public IPv4 address</span></h2>
+<p>I experimented with IPv6 only EC2 instances in the AWS LAM VPC but decided there are two many issues and that for now I would focus on dual stack instances with the option to launch without a public IPv4 address assigned.  One of the main issues is that the default VPC that AWS creates for you in a region is provisioned with a private IPv4 subnet for each availability zone and the public IPv4 address is actually implemented with NAT at the internet gateway.  I have come to rely on AWS EFS as a persistent parallel file system that can be mounted with nfs4 during the CloudInit phase to be available for initialization of the instance.  My initial investigation found that the EFS service does not yet have the capability to support IPv6 and relies on the private IPv4 subnets.
+</p><p>I can now launch a LAM Alaska clone on an instance without a public IPv4 address for multiple Operating Systems but have separate scripts that address a number of issues.  The first issue is that I use git clone to provision the websites but GitHub and ak20 my LAM Alaska server are not available over IPv6.  A second issue is that DuckDNS is also not available over IPv6.
+</p><p>I maintain a copy of all the git repositories on the EFS that I serve up on the secure side with gitweb.  I can use these repos for the CloudInit to start a new LAM Alaska clone but only a server with a public IPv4 address can sync the repos with the GitHub or ak20 remotes.  A server with a public IPv4 address can set the IPv6 address for a DuckDNS subdomain to point to a different IPv6 server so I can start a LAM Alaska clone without a public IPv4 address but I can only access it though a server with a dual stack from my laptop or any computer on the LAM Alaska LAN that only has IPv4 access to the internet.  The ssh SOCKS5 proxy I setup using the aws server to access the internet now gives me dual stack access to the internet.
+</p>
+<h2><span id="IPv6_address_allocation">IPv6 address allocation</span></h2>
+<p>In order to allow efficient route aggregation, thereby reducing the size of the Internet routing tables, only one-eighth of the total address space (2000::/3) is currently allocated for use on the Internet.
+</p><p>The address space is assigned to the RIRs in blocks of /23 up to /12.
+</p><p>The RIRs assign smaller blocks to local Internet registries that distribute them to users. These are typically in sizes from /19 to /32.
+</p><p>The addresses are then typically distributed in /48 to /56 sized blocks to the end users.
+</p>
+<ul><li>/12 4096 of these blocks (512 allocated)</li>
+<li>/23 8,388,608 of these blocks (1,048,576 allocated)</li>
+<li>/32 4,294,967,296 of these blocks (same as the entire IPv4 address space) (536,870,912 allocated)</li>
+<li>/56 7.2 * 10^16 of these blocks (9.0 * 10^15 allocated) (16,777,216 /56 blocks per /32 block)</li>
+<li>/64 (256 /64 blocks per /56 block)</li></ul>
+<p>A /64 block is typically the smallest assigned to a subnet and a /56 block is typically the smallest assigned to an end user.
+</p>
+<h3><span id="AWS_LAM_IPv6_address_allocations">AWS LAM IPv6 address allocations</span></h3>
+<p>AWS will assign an Amazon provided /56 CIDR block of IPv6 addresses for each VPC.  I requested a /56 block for each of the regions and I assigned a /64 block from this space for each subnet in a region.  By default a VPC gets a subnet for each availability zone in the region.  I updated each existing subnet to have a public IPv6 block as well as a private IPv4 block.  I specified that a new instance gets an IPv6 address auto assigned upon launch from the pool for the subnet as well as the private IPv4 address it was getting.  I updated the security group rules to allow ssh access to the us-west-2 Oregon region to and from an instance in an AWS LAM VPC in any region.
+</p><p>The LAM AWS VPC EC2 initialization process automatically assigns an IPv6 address and AWS allows me to assign a second IPv6 address.  I assign a second IP address for the instance taking advantage of the zero elimination notation for a shorter address.  AWS reserves the&#160;::{0,1,2,3) and ffff:ffff:ffff:ffff addresses of each subnet for their use.  I can remove the auto assigned IPv6 address after assigning the shorter address and updating the DDNS.
+</p>
+<ul><li><a rel="nofollow" href="http://[2600:1f14:3d86:2c00::a]">2600:1f14:3d86:2c00::a</a> # <a rel="nofollow" href="http://aws.lam1.us">aws.lam1.us</a> t4g.nano instance in us-west-2 Oregon</li>
+<li><a rel="nofollow" href="http://[2600:1f14:3d86:2c01::b]">2600:1f14:3d86:2c01::b</a> # <a rel="nofollow" href="http://lam3.lam1.us">lam3.lam1.us</a> t3.nano instance in us-west-2 Oregon</li></ul>
+<h2><span id="IPv4_and_IPv6_computers_cannot_communicate_directly_with_each_other">IPv4 and IPv6 computers cannot communicate directly with each other</span></h2>
+<p>NAT64 is a mechanism to allow IPv6 hosts to communicate with IPv4 servers. The NAT64 server is the endpoint for at least one IPv4 address and an IPv6 network segment
+</p><p>DNS64 describes a DNS server that when asked for a domain's AAAA records, but only finds A records, synthesizes the AAAA records from the A records. The first part of the synthesized IPv6 address points to an IPv6/IPv4 translator and the second part embeds the IPv4 address from the A record. The translator in question is usually a NAT64 server.
+</p><p>AWS provides <a rel="nofollow" href="https://en.wikipedia.org/wiki/IPv6_transition_mechanism">IPv6 transition mechanisms</a> such as NAT64 and DNS64 at additional cost.  My initial investigation found a NAT64 gateway for my AWS LAM VPC would cost me the price of a Public IPv4 address plus cost equivalent to a small instance (4 times a nano instance cost).
+</p><p>Without IPv6 transition mechanisms the AWS LAM VPC EC2 instances without a public IPv4 address cannot establish IPv4 connections outside of the VPC.  Even with a public IPv4 address the EC2 instance only knows of it's private IPv4 address and the gateway does Network Address Translation (NAT) to and from the private IPv4 address and the public IPv4 address.
+</p><p>My conclusion is that until a much greater percentage of the web supports IPv6 I will run a dual stack instance with a public IPv4 address as my main instance.  Until I have at least five instances running it is not cost effective for me to implement a NAT64/DNS64 to allow AWS LAM VPC EC2 instances without a public IPv4 address to communicate over IPv4 to the internet.  I can launch AWS LAM VPC EC2 instances without a public IPv4 address for testing as long as I have an instance with a public IPv4 address to communicate with it during initialization.
+</p>
+<h2><span id="IPv6_only_barriers">IPv6 only barriers</span></h2>
+<p>Before I can do away with dual stack internet access and go to IPv6 only a lot of things have to change:
+</p>
+<ul><li>Amazon Web Services (AWS) or another Cloud Service Provider must support it</li>
+<li>GCI or another ISP must provide IPv6 internet access for the LAM Alaska LAN</li>
+<li>GitHub or another git remote must support IPv6 internet access.
+<ul><li>GitLab supports IPv6 and IPv4 access as a public git remote.</li></ul></li>
+<li>DuckDNS or another DDNS service must support IPv6 internet access.
+<ul><li>I have a workaround that uses ssh connectivity to my main aws instance.</li></ul></li>
+<li>For Ubuntu IPv6 internet access must be supported for the snap install process.
+<ul><li>This support became available September 2024.</li></ul></li></ul>
+<p>My research tells me that US ISPs are behind those in other parts of the world in providing IPv6 internet access.
+</p><p>My research also tells me that most ISPs that provide IPv6 access either provide dual stack or services such as NAT64/DNS64 to allow access to IPv4 sites from a computer with IPv6 only internet access.
+</p>
+<h2><span id="IPv6_only_barriers_solved">IPv6 only barriers solved</span></h2>
+<p>The first issue was that I used git clone to provision the websites but GitHub and ak20 my LAM Alaska server are not available over IPv6.  I solved this issue by getting a GitLab account which supports both IPv4 and IPv6 and moving my main Git store to aws.lam1.us which supports both IPv4 and IPv6.  I access the aws.lam1.us Git store using the ssh to aws access and git user I set up during initialization.
+</p><p>The aws-efs-www-git-clone.bash program was originally an IPv6 only workaround and is now used to access private git repos.
+</p>
+<ul><li><a rel="nofollow" href="https://github.com/LAMurakami/lamurakami.github.io/blob/master/aws-efs/aws-efs-www-git-clone.bash">aws-efs-www-git-clone.bash</a> # Clone from aws instance git repo with ssh to aws connectivity link using gituser.
+<ul><li>Either git@localhost or git@aws is used utilizing the known_host entries added during initialization.</li></ul></li></ul>
+<h2><span id="IPv6_only_workarounds">IPv6 only workarounds</span></h2>
+<p>This first workaround uses two programs and the ssh to aws connection so that an instance without a public IPv4 address can check in to DuckDNS which currently does not support IPv6 for that process.
+</p>
+<ul><li><a rel="nofollow" href="https://github.com/LAMurakami/aws/blob/master/Update-DuckDNS.bash">Update-DuckDNS.bash</a> # This program gets IPv6 then uses ssh to aws to call the second program to finish the job.</li>
+<li><a rel="nofollow" href="https://github.com/LAMurakami/aws/blob/master/Update-DuckDNS-IPv6-from-IPv4.bash">Update-DuckDNS-IPv6-from-IPv4.bash</a> # This program on aws can do the check-in</li></ul>
+<p>The following workarounds use direct access to the main aws-efs filesystem in the us-sest-2 Oregon region that has the main copies of the most recent backups including the lam git repo store, gzipped tar files, and gzipped db archives for an instance launched in that region.
+</p><p>For an instance launched in another region the ssh to aws connectivity is used.  The aws.lam1.us instance must be up and the bash aws-efs root-ssh-known_hosts and user resources enable the ssh access with host and user public keys.
+</p>
+<ul><li><a rel="nofollow" href="https://github.com/LAMurakami/aws/blob/master/aws-efs-tar-extract.bash">aws-efs-tar-extract.bash</a> # Extract a gzip compressed tar archive</li>
+<li><a rel="nofollow" href="https://github.com/LAMurakami/aws/blob/master/aws-efs-db-extract.bash">aws-efs-db-extract.bash</a> # Extract a gzip compressed db archive</li></ul>
+<p>An instance with a Public IPv4 address can use the GitHub public repos and tar and db archives on AWS S3.
+</p>
+<ul><li><a href="/a/Using_-gateway_.ssh/config_host_entries_as_an_IPv6_only_workaround" title="Using -gateway .ssh/config host entries as an IPv6 only workaround">Using -gateway .ssh/config host entries as an IPv6 only workaround</a></li></ul>
+<p>This workaround also uses the ssh to aws connectivity and creates tunnels and ssh config host entries to allow processes that expect a direct connection to use alternate hostnames for the tunnel connections using the ssh to aws connectivity without any other changes.
+</p>
+<h2><span id="IPv6_only_final_solution">IPv6 only final solution</span></h2>
+<p>The final solution would be to run IPv6 only systems.  It looks like the Internet will continue to run on IPv4 for the foreseeable future using an address space that is, effectively, exhausted.  It's unlikely we'll be completely rid of IPv4 any time in the coming decades.  It is unknown when or even if IPv6 deployment will reach 100%.
+</p>
+<h2><span id="Log">Log</span></h2>
+<ul><li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z25/z2501/2025-01-14/Daily-ak19.txt">Tuesday, January 14, 2025</a> I added the IPv6 only final solution section.
+<ul><li>We may not get to IPv6 only in my lifetime.</li></ul></li>
+<li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z24/z2409/2024-09-27/Daily-ak19.txt">Friday, September 27, 2024</a> I was able to install aws-cli on the lam3 instance.
+<ul><li>The failure of snap on an instance without a public IPv4 addresses has been resolved.</li>
+<li>I have already replaced aws s3 access with aws ssh access in the cloud-init process.  The aws ssh access requires my main aws instance to be up to support the cloud-init process.</li>
+<li>Prior to this bug fix an Ubuntu 24.04 Noble Numbat instance without a public IPv4 address could not install the snap aws-cli package that Ubuntu replaced the regular awscli package with that was available in Ubuntu 22.04 Jammy Jellyfish and earlier versions of the OS.  The awscli package is still available in the latest version of Debian and Amazon Linux as well as in the previous version of Ubuntu.</li></ul></li>
+<li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z24/z2406/2024-06-18/Daily-ak19.txt">Tuesday, June 18, 2024</a> I created the <a rel="nofollow" href="https://github.com/LAMurakami/aws/commit/a9a1fbf">lam-wikidb-refresh-clone-from-aws-efs.bash</a> script to utilize the aws-efs-db-extract.bash script on a daily basis instead of just at initialization.
+<ul><li>I added REGION.bash to the aws repo (a copy of <a rel="nofollow" href="https://github.com/LAMurakami/lamurakami.github.io/blob/master/aws-efs/REGION.bash">the aws-efs version</a>).</li></ul></li>
+<li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z24/z2405/2024-05-29/Daily-ak19.txt">Wednesday, May 29, 2024</a> I added myself to a bug report as part of another IPv6 only barrier.
+<ul><li>The <a rel="nofollow" href="https://bugs.launchpad.net/snapstore-server/+bug/1710022">Snap store APIs (api.snapcraft.io) are not reachable via IPv6</a> bug affects me and 42 other people at the time of my comment over six years after it's creation.
+<ul><li>The importance of the bug is currently "Wishlist".  I added Affects "Ubuntu" with "new" status and "Undecided" Importance.</li></ul></li>
+<li>In 2023 when I learned AWS was going to charge a punitive amount for a public IPv4 address I modified the AWS LAM VPC subnets to automatically assign an IPv6 address from the 2600:1f14:3d86:2c00::/56 CIDR block for EC2 instance launched in my us-west-2 Oregon region AWS LAM VPC.  This changed my default instances to dual stack IPv4 and IPv6 instances.  At the time I was taking advantage of the ARM Free Tier promotion and running a t4g.small instance as well as the t3.nano reserved instance until the end of the promotion at the end of the year.  This change to both IPv4 and IPv6 addresses gets me into the IPv6 internet at no additional cost and is the first step in the transition to IPv6 only or at least no public IPv4 address at AWS punitive prices.</li>
+<li>For Ubuntu IPv6 internet access must be supported for the apt update process.</li>
+<li>The initial IPv6 issue for Ubuntu apt was found in February of 2024 to only be affecting six regions of which us-west-2 Oregon, my default region, was one of.  By April of 2024 this had been resolved and all 29 regions could do apt operations without a public IPv4 address using the default Ubuntu image.
+<ul><li>At least one of the default software sources of the latest Ubuntu AMI doesn't have IPv6 addresses and thus apt can't be used without a public IPv4 address.</li>
+<li>The ways I found to report this issue to AWS or Ubuntu are not available to me without paying for service.</li>
+<li>I use Amazon Machine Images (AMI) and the package update process in the initialization of an instance.  The default AMIs do not have the nfs-common package installed which is required to mount the Elastic File System (EFS).  The EFS is my way around github and ak20 not yet supporting IPv6.</li>
+<li>I noticed it when testing instances after hearing AWS will start charging for a public IPv4 address.</li>
+<li>I dis see an IPv6 address for a few days and could use apt on Ubuntu but they disappeared again after a few days.</li>
+<li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z23/z2312/2023-12-07/Daily-ak19.txt">Thursday, December 7, 2023</a> I saw no IPv6 address for all the regions in the US and Canada and some of the regions in Europe.  I did not see any IPv6 addresses but didn't have the right domain name for some of the regions.</li></ul></li></ul></li>
+<li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z23/z2311/2023-11-28/Daily-ak19.txt">Wednesday, November 29, 2023</a> I can initiate a LAM Alaska clone in the AWS LAM VPC without a public IPv4 address on Debian 12, Ubuntu 22.04,  Amazon Linux 2, and Amazon Linux 2023 on both x86 and ARM architectures.
+<ul><li>The new Ubuntu 22.04 20231128 images that are not yet on the AWS EC2 Launch Instance page worked but testing showed that the us-west-2.ec2.archive.ubuntu.com domain name now has IPv6 addresses as well as IPv4 addresses and the older image now works as well.</li>
+<li>Initially a major issue with Ubuntu was that I could not do apt upgrade or apt install without IPv4 because one of the servers specified in the default image can't be accessed without IPv4.</li></ul></li></ul>
+<!-- 
+NewPP limit report
+Cached time: 20250115101512
+Cache expiry: 86400
+Reduced expiry: false
+Complications: [show‐toc]
+CPU time usage: 0.008 seconds
+Real time usage: 0.008 seconds
+Preprocessor visited node count: 45/1000000
+Post‐expand include size: 120/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/100
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    0.000      1 -total
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:470-0!canonical and timestamp 20250115101512 and revision id 8431. Rendering was triggered because: edit-page
+ -->
+</div>
+</div>
+<!-- end content -->
+
+<div id="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" style="display:none" /><div lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><label for="toctogglecheckbox"></label></div>
+<div data-nosnippet="">Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=LAM_Alaska_from_IPv4_to_IPv6&amp;oldid=8431">https://ak20.lam1.us/A/index.php?title=LAM_Alaska_from_IPv4_to_IPv6&amp;oldid=8431</a>"</div>
+<ul>
+<li><a href="#Dual_stack_(IPv4_and_IPv6)_for_the_foreseeable_future">1 Dual stack (IPv4 and IPv6) for the foreseeable future</a></li>
+<li><a href="#AWS_charges_for_a_Public_IPv4_address">2 AWS charges for a Public IPv4 address</a></li>
+<li><a href="#AWS_LAM_VPC_history">3 AWS LAM VPC history</a></li>
+<li><a href="#IPv6_only_EC2_instances_vs_dual_stack_instances_with_no_public_IPv4_address">4 IPv6 only EC2 instances vs dual stack instances with no public IPv4 address</a></li>
+<li><a href="#IPv6_address_allocation">5 IPv6 address allocation</a>
+<ul>
+<li><a href="#AWS_LAM_IPv6_address_allocations">5.1 AWS LAM IPv6 address allocations</a></li>
+</ul>
+</li>
+<li><a href="#IPv4_and_IPv6_computers_cannot_communicate_directly_with_each_other">6 IPv4 and IPv6 computers cannot communicate directly with each other</a></li>
+<li><a href="#IPv6_only_barriers">7 IPv6 only barriers</a></li>
+<li><a href="#IPv6_only_barriers_solved">8 IPv6 only barriers solved</a></li>
+<li><a href="#IPv6_only_workarounds">9 IPv6 only workarounds</a></li>
+<li><a href="#IPv6_only_final_solution">10 IPv6 only final solution</a></li>
+<li><a href="#Log">11 Log</a></li>
+</ul>
+</div>
+<br><hr>
+<a href="#top"><img border="0" src="/ScrollUp.gif" alt="up" />
+Top of this document
+<img border="0" src="/ScrollUp.gif" alt="up" /></a>
+
+<span style="float: right;">
+Wednesday, January 15, 2025 @ 1:51:20 AM (Alaska Time)</span>

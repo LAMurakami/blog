@@ -1,0 +1,174 @@
+---
+layout: post
+title: "Modify AWS VPC for IPv6"
+date: 2025-01-16 00:00:59 -0800
+---
+<span style="float: right;"><a href="#toc">Contents</a></span>
+
+<!-- start content -->
+<div id="mw-content-text"><div lang="en" dir="ltr">
+
+<h2><span id="Amazon_Web_Services_.28AWS.29_is_built_on_the_IPv4_protocol"></span><span id="Amazon_Web_Services_(AWS)_is_built_on_the_IPv4_protocol">Amazon Web Services (AWS) is built on the IPv4 protocol</span></h2>
+<p><a rel="nofollow" href="http://aws.lam1.us/About/">Linux Apache MariaDB in the cloud</a>
+</p>
+<ul><li><a rel="nofollow" href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-migrate-ipv6.html">Migrate your VPC from IPv4 to IPv6</a></li>
+<li><a rel="nofollow" href="https://lamurakami.github.io/blog/2025/01/15/I-may-not-get-to-IPv6-only-in-my-lifetime.html">LAM Alaska from IPv4 to IPv6</a></li></ul>
+<p>This guide is designed for those launching Linux instances within a VPC of an AWS region.  I started research on it in the summer of 2023 when I saw the announcement that AWS would start charging a predatory price for every hour of use of a public IPv4 address starting February 2024.  I started using AWS in 2017 and at that time new users were getting a default VPC for every region.  Some accounts created earlier may not be in the VPC environment that is currently the AWS default.
+</p><p>The Amazon Web Services (AWS) is built on the IPv4 protocol and although you can add IPv6 capability including the automatic assignment of a public IPv6 address with the launch of an instance within the VPC you cannot eliminate IPv4.  You will be running a dual stack and the foundation of AWS is based on each VPC having a private IPv4 address space with a portion of that space being assigned to a subnet for every availability zone within the region.  You can request a public IPv4 address which will be associated with the private IPv4 address via NAT at the gateway.
+</p><p>These changes to the default for an AWS VPC will result in you running dual stack instances with a private IPv4 address and a public IPv6 address.
+</p>
+<h2><span id="What_does_IPv6_get_me">What does IPv6 get me</span></h2>
+<p>A public IP Address without paying $0.005 / Hour = $0.12 / Day ~= $3.60 / Month ~= $43.80 / year.
+</p><p>IPv6 addresses by default are public and uniquily addressable.  IPv6 eliminates NAT (Network Address Translation) and instead provides end-to-end connectivity at the IP layer.  This is doable because of the huge increase in IP addresses.  Every address being unique prevents private address collisions.
+</p><p>Most consider a full migration to IPv6 as inevitable and important for the long-term sustainability of the internet but after 25 years we are at less than 50% adoption by most measures and a huge amount of computers capable of IPv6 are operating a Dual Stack.
+</p>
+<h2><span id="Associate_an_IPv6_CIDR_block_with_each_VPC_and_subnet">Associate an IPv6 CIDR block with each VPC and subnet</span></h2>
+<p>I use an Amazon provided IPv6 CIDR block.  Amazon provides a /56 block for each VPC.  A /56 block is enough for 256 subnets that are each a /64 block.  Each subnet has the number of addresses in the whole IPv4 space raised to the power of the number of addresses in the whole IPv4 space which is a mind boggling number.  The IPv4 /20 CIDR block has 4096 addresses of which AWS reserves some for it's use so each availability zone provides over 4,000 IPv4 addresses for resources such as instances in the standard configuration.
+</p>
+<ul><li>2600:1f14:3d86:2c00::/56 us-west-2 Oregon LAM AWS VPC IPv6 CIDR <span style="background-color: lime">my main region</span>
+<ul><li>2600:1f14:3d86:2c0a::/64 | 172.31.16.0/20 | us-west-2a availability zone</li>
+<li>2600:1f14:3d86:2c01::/64 | 172.31.32.0/20 | us-west-2b availability zone</li>
+<li>2600:1f14:3d86:2c0c::/64 | 172.31.0.0/20  | us-west-2c availability zone</li>
+<li>2600:1f14:3d86:2c00::/64 | 172.31.48.0/20 | us-west-2d availability zone</li></ul></li>
+<li>2600:1f18:3370:6900::/56 us-east-1 N. Virginia LAM AWS VPC IPv6 CIDR
+<ul><li>2600:1f18:3370:690a::/64 | 172.31.16.0/20 | us-east-1a availability zone</li>
+<li>2600:1f18:3370:690b::/64 | 172.31.32.0/20 | us-east-1b availability zone</li>
+<li>2600:1f18:3370:690c::/64 | 172.31.0.0/20 | us-east-1c availability zone</li>
+<li>2600:1f18:3370:690d::/64 | 172.31.80.0/20 | us-east-1d availability zone</li>
+<li>2600:1f18:3370:690e::/64 | 172.31.48.0/20 | us-east-1e availability zone</li>
+<li>2600:1f18:3370:690f::/64 | 172.31.64.0/20 | us-east-1f availability zone</li></ul></li>
+<li>2600:1f11:e3:1500::/56 ca-central-1 Canada</li>
+<li>2600:1f16:1e4e:7000::/56 us-east-2 Ohio</li>
+<li>2600:1f1c:920:e400::/56 us-west-1 N. California</li>
+<li>2a05:d014:3c:9000::/56 eu-central-1 Frankfurt</li>
+<li>2a05:d018:e47:4700::/56 eu-west-1 Ireland</li>
+<li>2a05:d01c:dc5:e00::/56 eu-west-2 London</li>
+<li>2a05:d012:faa:da00::/56 eu-west-3 Paris</li>
+<li>2a05:d016:6d7:ca00::/56 eu-north-1 Stockholm</li>
+<li>2600:1f1e:c9c:8300::/56 sa-east-1 Sao Paulo (South America)</li>
+<li>2406:da14:f5c:c900::/56 ap-northeast-1 Tokyo</li>
+<li>2406:da18:5b1:8700::/56 ap-southeast-1 Singapore</li>
+<li>2406:da1c:255:a800::/56 ap-southeast-2 Sydney</li>
+<li>2406:da12:e63:8e00::/56 ap-northeast-2 Seoul</li>
+<li>2406:da16:57c:ed00::/56  ap-northeast-3 Osaka</li>
+<li>2406:da1a:d73:6f00::/56 ap-south-1 Mumbai</li>
+<li>2600:1f1a:49a2:3500::/56 ca-west-1 Calgary</li>
+<li>2406:da11:79f:c900::/56 af-south-1 Cape Town</li>
+<li>2406:da1f:cf5:6d00::/56 ap-southeast-4 Melbourne</li>
+<li>2a05:d01e:ccf:6400::/56 me-south-1 Bahrain</li>
+<li>2406:da17:250:5f00::/56 me-central-1 United Arab Emirates (UAE)</li>
+<li>2a05:d025:b2e:d900::/56 il-central-1 Tel Aviv (Israel)</li>
+<li>2406:da1b:ad5:d700::/56 ap-south-2 Hyderabad (India)</li>
+<li>2406:da19:cf5:dc00::/56 ap-southeast-3 Jakarta {Indonesia)</li>
+<li>2a05:d01a:454:b900::/56 eu-south-1 Milan (Italy)</li>
+<li>2a05:d011:9ab:4400::/56 eu-south-2 Spain</li>
+<li>2a05:d019:113:7b00::/56 eu-central-2 Zurich</li>
+<li>2406:da1e:ee0:4b00::/56 ap-east-1 Hong Kong</li>
+<li>2406:da10:8bc3:8000::/56 ap-southeast-5 Asia Pacific (Malaysia)</li>
+<li>2406:da14:862d:8d00::/56 ap-aoutheast-7 Asia Pacific (Thailand)</li></ul>
+<p>I added and Amazon provided IPv6 CIDR block for each of the regions I already have a VPC in.  The region selection dialog told me there were 12 Regions that were not enabled for my account.  I selected all to be enabled which was indicated to be a no charge action.  Six on the regions went to an enabling status and six others failed.  With a repeat request they all became enabled.  I then proceeded to add an Amazon provided IPv6 CIDR block for all of the 29 AWS regions I now had an AWS VPC in.  By default AWS assigned over 4.2 <a rel="nofollow" href="https://en.wikipedia.org/wiki/Names_of_large_numbers">Sextillion</a> IPv6 addresses for each of the 29 regions where I asked for an IPv6 CIDR block from the AWS pool. AWS reserves five or six of the IPv6 addresses in each subnet for their use.
+</p><p>The default VPC uses the 172.31.0.0/16 IPv4 private address space and subnets use a portion stating with 172.31.0.0/20.  The number of availability zones varies by region.  The order of subnets does not seem to mach the alphanumeric order of either the availability zone name or ID.  For the us-east-1 region the six availability zone names are us-east-1{a,b,c,d,e,f} and I replaced 0::/56 of the IPv6 CIDR for the VPC with {a,b,c,d,e,f}::/64 matching the letter at the end of the availability zone name.  I detailed the IPv6 CIDR blocks assigned to my subnets in the us-west-2 Oregon and us-east-1 N. Virginia regions in the above but left it out of the rest for brevity.
+</p>
+<h2><span id="Update_each_subnet_to_Auto-assign_an_IPv6_address">Update each subnet to Auto-assign an IPv6 address</span></h2>
+<p>The "Auto-assign IPv6 address" attribute for each subnet can only be set to yes after an IPv6 CIDR block has been assigned to the subnet.
+</p><p>By updating all the subnets I will always get an IPv6 address even when not specifying which subnet (or availability zone) to use when launching an instance in that region.
+</p>
+<h2><span id="Update_route_table_to_route_IPv6_traffic">Update route table to route IPv6 traffic</span></h2>
+<p>Add a route from&#160;::/0 to the Internet Gateway like the default route from 0.0.0.0/0
+</p>
+<h2><span id="Update_security_group_rules">Update security group rules</span></h2>
+<p>Update security group rules to include rules for IPv6 addresses.
+</p><p>In my case I create a new aws-web-anywhere security group.
+</p><p>I add incoming rules for both IPv4 and IPv6 anywhere for HTTP HTTPS and for Custom TCP on 55520 and 2222 for SSH on alternate port.  I add incoming rules for both IPv4 and IPv6 for SSH on the standard port limiting to the private IPv4 address space and the IPv6 CIDR blocks reserved for my AWS VPCs.
+</p><p>In us-west-2 I have rules for IMAPS on an alternate port and a ICMP rule to allow ping.  I am not testing IMAPS or ping yet so am leaving these out of the aws-web-anywhere security group for other regions.  The aws-web-anywhere security group in the new regions actually more closely matches the aws-web-anywhere-alt-ssh-port  security group I use by default in the us-west-2 region by default these days.
+</p>
+<h2><span id="Import_the_public_part_of_a_key_pair">Import the public part of a key pair</span></h2>
+<p>For my first region I had Amazon create a key pair for me then added the public key for the key pair I use most often in the cloud-init file.  For the ca-central-1 and later regions I import that key into a lam-arsc key pair I use to launch a Linux instance.
+</p>
+<h2><span id="Add_an_incoming_rule_for_SSH_to_us-west-2_Oregon_security_group">Add an incoming rule for SSH to us-west-2 Oregon security group</span></h2>
+<p>Add an incoming rule for SSH on the standard port from the IPv6 CIDR blocks reserved for the LAM AWS VPC in the new region to the aws-web-anywhere-alt-ssh-port security group rules in the us-west-2 Oregon region where the main aws instance runs.  This allows an instance in the region to communicate with the main aws instance during initialization which is required for a successful completion of an instance without a public IPv4 address as part of the IPv6 only workarounds I have developed.
+</p><p>The new SSH rule should actually be added to every region to allow an instance in any region to become my main aws instance but currently my main aws instance is limited to running in the us-west-2d Availablity Zone of the us-west-2 Oregon region.
+</p>
+<h2><span id="Create_and_populate_EFS_with_user_resource_files">Create and populate EFS with user resource files</span></h2>
+<p>The <a rel="nofollow" href="https://sites.lam1.us/About">Linux Apache MariaDB in the cloud</a> LAM Alaska clone initialization counts on an <a rel="nofollow" href="https://lamurakami.gitlab.io/aws-efs">(AWS) Elastic File System (EFS)</a> populated with the ubuntu.tgz and ec2-user.tgz user resource files'
+</p>
+<ul><li><a rel="nofollow" href="https://lamurakami.gitlab.io/aws-efs/#Create_an_EFS_in_a_region">Create an EFS in a region</a></li>
+<li><a rel="nofollow" href="https://lamurakami.gitlab.io/aws-efs/#Populate_EFS_with_the_ubuntu.tgz_and_ec2-user.tgz_user_resource_files">Populate with the ubuntu.tgz and ec2-user.tgz user resource files</a>]</li></ul>
+<p>Once the EFS has been created in the region and the <a rel="nofollow" href="https://gitlab.com/aws-lam/aws/-/commit/b0c2d07">aws-efs-mount.bash script</a> modified with the EFS for the new region a new LAM Alaksa Clone instance will be able to mount the EFS for the region during initialization.  Some later steps requiring the user resource files will fail but the instance can be used to populate the EFS with the user resource files and a subsequent instance launched into the region should be able to complete all initialization steps.
+</p>
+<h2><span id="Log">Log</span></h2>
+<ul><li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z25/z2501/2025-01-09/Daily-ak19.txt">Thursday, January 9, 2025</a> I saw a new region had been added and by <a rel="nofollow" href="https://ak20.lam1.us/Zz/z25/z2501/2025-01-10/Daily-ak19.txt">Friday, January 10, 2025</a> I can launch a LAM Alaska clone there.
+<ul><li>EFS was available in the new ap-aoutheast-7 Asia Pacific (Thailand) as soon as I enabled access for my account.</li>
+<li><a rel="nofollow" href="https://gitlab.com/aws-lam/aws/-/commit/80337e508244">Add ap-southeast-7 Asia Pacific (Thailand) region</a> to aws-efs-mount.bash and modified <a href="/a/Linux_Apache_MariaDB_in_the_cloud" title="Linux Apache MariaDB in the cloud">Linux Apache MariaDB in the cloud</a> for the new region.</li></ul></li>
+<li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z24/z2409/2024-09-20/Daily-ak19.txt">Friday, September 20, 2024</a> I was able to successfully initialize a LAM Alaska clone in the new ap-southeast-5 Asia Pacific (Malaysia) region after the following:
+<ul><li>Create EFS (Elastic File System) in the Malaysia region.</li>
+<li><a rel="nofollow" href="https://gitlab.com/aws-lam/aws/-/commit/b0c2d07">Modify aws-efs-mount.bash script</a> with EFS for Malaysia region.</li>
+<li>Populate EFS with the latest ubuntu.tgz and ec2-user.tgz user resource files.</li>
+<li>Modify Inbound aws-web-anywhere-alt-ssh-port security group rules for Malaysia region IPv6 CIDR</li>
+<li>While in <a rel="nofollow" href="http://cabo.lam1.us/Weeks/2024/Fall/">Cabo</a> I found that EFS had become available in the new Asia Pacific (Malaysia) region and made a reminder to create the EFS and then launch a clone when I got home.</li>
+<li>It may have been less that two months after the new ap-southeast-5 Asia Pacific (Malaysia) region became available for EC2 that EFS became available.</li>
+<li>I can now launch a LAM Alaska clone in 30 of the current 34 regions (as of 2024).</li>
+<li>I don't have access to the US Government us-gov-west-1 and us-gov-east-1 regions or the China cn-northwest-1 and cn-north-1 regions.</li></ul></li>
+<li>On Saturday, August 24, 2024 I enabled the new Asia Pacific (Malaysia) region.  This is the 30th. region.
+<ul><li>EFS is not yet available in the brand new Asia Pacific (Malaysia) region.</li>
+<li>I removed the old region testing tags but added a new  <span style="background-color: pink">EFS is not yet available</span> tag.</li></ul></li>
+<li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z24/z2402/2024-02-17/Daily-ak19.txt">Saturday, February 17, 2024</a> continuing from <a rel="nofollow" href="https://ak20.lam1.us/Zz/z24/z2402/2024-02-16/Daily-ak19.txt">Friday</a> I completed modifying the last of my 28 AWS VPCs for IPv6.</li>
+<li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z24/z2402/2024-02-15/Daily-ak19.txt">Thursday, February 15, 2024</a> I added first test results for the regions I have enabled and modifed for IPv6
+<ul><li><span style="background-color: lime">passed test 01</span>: Ubuntu arm64 packages work without public IPv4 address</li>
+<li><span style="background-color: pink">failed test 01</span>: still shows that instance can get IPv6 address and launch without public IPv4 address in that region</li>
+<li><span style="background-color: lime">passed test 02</span>: Ubuntu arm64 packages work without public IPv4 address with sources.list fix</li></ul></li>
+<li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z24/z2402/2024-02-13/Daily-ak19.txt">Tuesday, February 13, 2024</a> I added all the LAM AWS VPC IPv6 CIDR blocks to the us-west-2 Oregon aws-web-anywhere-alt-ssh-port security group.
+<ul><li>I did the 'Modify AWS VPC for IPv6' steps on ca-central-1 Canada, us-east-2 Ohio, us-west-1 N. California, and eu-central-1 Frankfurt VPS to add to the us-west-2 Oregon and us-east-1 N. Virginia where I can launch and instance and automatically get a public IPv6 address.</li>
+<li>All tests of the newest 20240207.1 Jammy Jellyfish 22.04 LTS Ubuntu ami experienced the repo package problem from no IPv4 public address until I got to the eu-central-1 Frankfurt ami which was able to do package commands.</li>
+<li>I <a rel="nofollow" href="https://github.com/LAMurakami/aws/commit/6792f5e">created a euc-fix version of the aws-nwo-lam1-Ubuntu-CloudInit-ARM-No-Public-IPv4 cloud-init file</a> that fully became a LAM AWS clone on arm64 without a public IPv4 address.</li></ul></li>
+<li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z24/z2402/2024-02-12/Daily-ak19.txt">Monday, February 12, 2024</a> I created this page.
+<ul><li>After creating a security group specifically allowing ssh in the region to be specified at the time of launch I was able to connect.</li></ul></li>
+<li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z24/z2402/2024-02-11/Daily-ak19.txt">Sunday, February 11, 2024</a> I started a couple of instances in the us-east-1 region but was unable to connect.  I had first modified the default VPC for the region so that each instance would get an IPv6 public address as well as a private IPv4 address.  The private IPv4 address can optionally be tied to a public IPv4 address via NAT at the gateway for the hourly cost started this month.</li></ul>
+<!-- 
+NewPP limit report
+Cached time: 20250116022914
+Cache expiry: 86400
+Reduced expiry: false
+Complications: [show‐toc]
+CPU time usage: 0.008 seconds
+Real time usage: 0.008 seconds
+Preprocessor visited node count: 45/1000000
+Post‐expand include size: 180/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/100
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    0.000      1 -total
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:484-0!canonical and timestamp 20250116022914 and revision id 8437. Rendering was triggered because: edit-page
+ -->
+</div>
+</div>
+<!-- end content -->
+<div id="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" style="display:none" /><div lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><label for="toctogglecheckbox"></label></div>
+<div data-nosnippet="">Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=Modify_AWS_VPC_for_IPv6&amp;oldid=8437">https://ak20.lam1.us/A/index.php?title=Modify_AWS_VPC_for_IPv6&amp;oldid=8437</a>"</div>
+<ul>
+<li><a href="#Amazon_Web_Services_(AWS)_is_built_on_the_IPv4_protocol">1 Amazon Web Services (AWS) is built on the IPv4 protocol</a></li>
+<li><a href="#What_does_IPv6_get_me">2 What does IPv6 get me</a></li>
+<li><a href="#Associate_an_IPv6_CIDR_block_with_each_VPC_and_subnet">3 Associate an IPv6 CIDR block with each VPC and subnet</a></li>
+<li><a href="#Update_each_subnet_to_Auto-assign_an_IPv6_address">4 Update each subnet to Auto-assign an IPv6 address</a></li>
+<li><a href="#Update_route_table_to_route_IPv6_traffic">5 Update route table to route IPv6 traffic</a></li>
+<li><a href="#Update_security_group_rules">6 Update security group rules</a></li>
+<li><a href="#Import_the_public_part_of_a_key_pair">7 Import the public part of a key pair</a></li>
+<li><a href="#Add_an_incoming_rule_for_SSH_to_us-west-2_Oregon_security_group">8 Add an incoming rule for SSH to us-west-2 Oregon security group</a></li>
+<li><a href="#Create_and_populate_EFS_with_user_resource_files">9 Create and populate EFS with user resource files</a></li>
+<li><a href="#Log">10 Log</a></li>
+</ul>
+</div>
+<br><hr>
+<a href="#top"><img border="0" src="/ScrollUp.gif" alt="up" />
+Top of this document
+<img border="0" src="/ScrollUp.gif" alt="up" /></a>
+
+<span style="float: right;">
+Wednesday, January 15, 2025 @ 7:41:52 PM (Alaska Time)</span>

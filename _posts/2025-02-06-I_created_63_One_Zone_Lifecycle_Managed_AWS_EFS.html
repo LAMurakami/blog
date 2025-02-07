@@ -1,0 +1,234 @@
+---
+layout: post
+title: "I created 63 One Zone Lifecycle Managed AWS EFS"
+date: 2025-02-06 19:05:00 -0800
+---
+<span style="float: right;"><a href="#toc">Contents</a></span>
+<!-- start content -->
+<div id="mw-content-text"><div lang="en" dir="ltr">
+
+In 2025 I created 63 One Zone Lifecycle Managed <a rel="nofollow" href="https://aws.lam1.us/a/Amazon_Web_Services_(AWS)">Amazon Web Services (AWS)</a> <a rel="nofollow" href="https://lamurakami.gitlab.io/aws-efs/">Elastic File System (EFS)</a>.  One for each Availability Zone where supported that I have access to.
+
+<p>Each AWS Region is completely independent and designed to be isolated from the other AWS Regions.  Each Region is a separate geographic area.  Amazon Web Services (AWS) has multiple Availability Zones for each of it's regions.
+</p>
+
+<h2><span id="AWS_Availability_Zones_and_subnets">AWS Availability Zones and subnets</span></h2>
+<p>Availability Zones are multiple, isolated locations within each Region.  By launching your instances in separate Availability Zones, you can protect your applications from the failure of a single location in the Region.  The code for an Availability Zone (AZ) is its Region code followed by a letter identifier. For example, us-west-2d.  AWS might restrict you from launching an instance in a constrained Availability Zone and might also remove the constrained Availability Zone from the list of Availability Zones for new accounts.  Therefore, your account might have a different number of available Availability Zones in a Region than another account.  AWS independently maps Availability Zones to codes for each AWS account and an Availability Zone might not be the same physical location as for another AWS account.  AZ IDs are unique and consistent identifiers for an Availability Zone.
+</p><p>Each subnet must reside entirely within one Availability Zone and cannot span zones.  A subnet is a range of IP addresses in your VPC.  AWS accounts include a default VPC in each AWS Region.  The default VPC includes a subnet for each Availability Zone the account has access to in a region.  The default subnets AWS creates for the default VPC in each region use only IPv4 addresses I <a rel="nofollow" href="https://lamurakami.github.io/blog/2025/01/16/Modify_AWS_VPC_for_IPv6.html">modify AWS VPC for IPv6</a> so that I can have a public IP address without paying for an AWS public IPv4 address.
+</p><p>When you launch an instance, you select a Region and a virtual private cloud (VPC), and then you can either select a subnet for one of the Availability Zones or let AWS choose one for you.  When you launch your initial instances, AWS recommends that you accept the default Availability Zone, because this allows AWS to select the best Availability Zone for you based on system health and available capacity.
+</p>
+<h2><span id="AWS_Elastic_File_System_.28EFS.29_and_Availability_Zones"></span><span id="AWS_Elastic_File_System_(EFS)_and_Availability_Zones"><a rel="nofollow" href="https://lamurakami.gitlab.io/aws-efs">AWS Elastic File System (EFS)</a> and Availability Zones</span></h2>
+<p><a href="/a/(AWS)_Elastic_File_System_(EFS)" title="(AWS) Elastic File System (EFS)">(AWS) Elastic File System (EFS)</a> is supported in all 32 REGIONs enabled for my AWS account, as of January 2025, including support for Standard and Lifecycle Management EFS but a number of Availability Zones including all for many REGIONs do not yet support One Zone Lifecycle Managed EFS.  One Zone Lifecycle Managed EFS is now used as a replacement for the Elastic Block Store (EBS) volume I was using for the Zz cloud backup.
+</p><p>This page details Availability Zones with <b>No One Zone EFS</b> support by the LAM AWS VPC subnet id I would use to launch an instance in that AZ.  The only reason I have specified a specific Availability Zone when launching an instance was to connect to the Zz volume in us-west2d until I began testing where One Zone EFS is available.
+</p>
+<h2><span id="AWS_LAM_VPC_Availability_Zone_subnet_id">AWS LAM VPC Availability Zone subnet id</span></h2>
+<p>I use the subnet id to start an EC2 instance from Command line in a specific Availability Zone for a region.  I normally omit this parameter and let AWS choose the Availability Zone for the new instance.
+</p><p>On the Launch an instance page you can edit "Network settings" and select a specific subnet id from a drop-down list that shows all the subnets for the VPC along with the IPv4 CIDR block and Availability Zone.  When launching from the command line the "aws ec2 run-instances" command has a --subnet-id parameter which can be used along with the --region parameter to insure the instance runs in a particular Availability Zone.  Prior to 2025 I had only used Regional EFS.  For testing I needed for instances to launch in the specific Availability Zone where where I had created a One Zone EFS.  This document was created primarily to facilitate me setting the --subnet-id parameter when I want to launch an instance in a specific Availability Zone and also covers documenting where I found that a One Zone EFS is not currently supported.
+</p>
+<pre>aws ec2 describe-availability-zones --region us-west-2
+</pre>
+<p>Following is the subnet id for each Availability Zone of the AWS LAM VPC in each region:
+</p>
+<h3><span id="United_States">United States</span></h3>
+<ul><li><b>us-west-2 Oregon</b> vpc-71322b17 172.31.0.0/16 2600:1f14:3d86:2c00::/56
+<ul><li>SUBNET_ID=subnet-19f7d37f # <b>us-west-2a</b> 172.31.16.0/20 2600:1f14:3d86:2c0a::/64</li>
+<li>SUBNET_ID=subnet-1888cc50 # <b>us-west-2b</b> 172.31.32.0/20 2600:1f14:3d86:2c0b::/64</li>
+<li>SUBNET_ID=subnet-11ffe14a # <b>us-west-2c</b> 172.31.0.0/20 2600:1f14:3d86:2c0c::/64</li>
+<li>SUBNET_ID=subnet-2b13c400 # <b>us-west-2d</b> 172.31.48.0/20 2600:1f14:3d86:2c00::/64</li></ul></li>
+<li><b>us-east-1 N. Virginia</b> vpc-035d821c28c919b90 172.31.0.0/16 2600:1f18:3370:6900::/56
+<ul><li>SUBNET_ID=subnet-0092cbc7da4b544f8 # <b>us-east-1a</b> 172.31.16.0/20 2600:1f18:3370:690a::/64</li>
+<li>SUBNET_ID=subnet-06bc676b4785c0bf9 # <b>us-east-1b</b> 172.31.32.0/20 2600:1f18:3370:690b::/64</li>
+<li>SUBNET_ID=subnet-0d8404f0c0a0d63ec # <b>us-east-1c</b> 172.31.0.0/20 2600:1f18:3370:690c::/64</li>
+<li>SUBNET_ID=subnet-0cb345dcb13199378 # <b>us-east-1d</b> 172.31.80.0/20 2600:1f18:3370:690d::/64</li>
+<li>SUBNET_ID=subnet-093e315d658934beb # <b>us-east-1e</b> 172.31.48.0/20 2600:1f18:3370:690e::/64 <b>No One Zone EFS, t3.nano t3a.nano or t4g.nano</b></li>
+<li>SUBNET_ID=subnet-007fc03fcc382788c # <b>us-east-1f</b> 172.31.64.0/20 2600:1f18:3370:690f::/64</li></ul></li>
+<li><b>us-west-1 N. California</b> vpc-0db5b335f70043223 172.31.0.0/16 2600:1f1c:920:e400::/56
+<ul><li>SUBNET_ID=subnet-0644a45d8a37273fb # <b>us-west-1a</b> 172.31.16.0/20 2600:1f1c:920:e40a::/64</li>
+<li>SUBNET_ID=subnet-055c929bf5e782cd6 # <b>us-west-1c</b> 172.31.0.0/20 2600:1f1c:920:e40c::/64</li></ul></li>
+<li><b>us-east-2 Ohio</b> vpc-2fa45047 172.31.0.0/16 2600:1f16:1e4e:7000::/56
+<ul><li>SUBNET_ID=subnet-e2b74e8a # <b>us-east-2a</b> 172.31.0.0/20 2600:1f16:1e4e:700a::/64</li>
+<li>SUBNET_ID=subnet-f0e9d48b # <b>us-east-2b</b> 172.31.16.0/20 2600:1f16:1e4e:700b::/64</li>
+<li>SUBNET_ID=subnet-ec314ca1 # <b>us-east-2c</b> 172.31.32.0/20 2600:1f16:1e4e:700c::/64</li></ul></li></ul>
+<h3><span id="Africa">Africa</span></h3>
+<ul><li><b>af-south-1 Cape Town (South Africa)</b> vpc-044d4935148dd7100 172.31.0.0/16 2406:da11:79f:c900::/56
+<ul><li>SUBNET_ID=subnet-0bd06bc462a58f79f # <b>af-south-1a</b> 172.31.0.0/20 2406:da11:79f:c90a::/64</li>
+<li>SUBNET_ID=subnet-03720be5faae5d22b # <b>af-south-1b</b> 172.31.32.0/20 2406:da11:79f:c90b::/64</li>
+<li>SUBNET_ID=subnet-01eba4556348aa1d5 # <b>af-south-1c</b> 172.31.16.0/20 2406:da11:79f:c90c::/64</li></ul></li></ul>
+<h3><span id="Asia_Pacific">Asia Pacific</span></h3>
+<ul><li><b>ap-east-1 Hong Kong</b> vpc-0ee1ac602773753d 172.31.0.0/16 2406:da1e:ee0:4b00::/56
+<ul><li>SUBNET_ID=subnet-0b274624984de468f # <b>ap-east-1a</b> 172.31.16.0/20 2406:da1e:ee0:4b0a::/64</li>
+<li>SUBNET_ID=subnet-0080494b306578605 # <b>ap-east-1b</b> 172.31.0.0/20 2406:da1e:ee0:4b0b::/64</li>
+<li>SUBNET_ID=subnet-08686462be2b1e362 # <b>ap-east-1c</b> 172.31.32.0/20 2406:da1e:ee0:4b0c::/64</li></ul></li>
+<li><b>ap-south-2 Hyderabad (India)</b> vpc-0306265fa925185cf 172.31.0.0/16 2406:da1b:ad5:d700::/56
+<ul><li>SUBNET_ID=subnet-024131dd54bff4d9f # <b>ap-south-2a</b> 172.31.0.0/20 2406:da1b:ad5:d70a::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-059fbf5ac5c6405dd # <b>ap-south-2b</b> 172.31.32.0/20 2406:da1b:ad5:d70b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-0545e20be34a0c6df # <b>ap-south-2c</b> 172.31.16.0/20 2406:da1b:ad5:d70c::/64 <b>No One Zone EFS</b></li></ul></li>
+<li><b>ap-southeast-3 Jakarta (Indonesia)</b> vpc-04e042bd372ada58f 172.31.0.0/16 2406:da19:cf5:dc00::/56
+<ul><li>SUBNET_ID=subnet-0b83a2596d5167853 # <b>ap-southeast-3a</b> 172.31.0.0/20 2406:da19:cf5:dc0a::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-0cd44af6df8fbb47f # <b>ap-southeast-3b</b> 172.31.32.0/20 2406:da19:cf5:dc0b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-0d9c4505c8cfecaef $ <b>ap-southeast-3c</b> 172.31.16.0/20 2406:da19:cf5:dc0c::/64 <b>No One Zone EFS</b></li></ul></li>
+<li><b>ap-southeast-5 Malaysia</b> vpc-0458abb6cd6d3e13a 172.31.0.0/16 2406:da10:8bc3:8000::/56
+<ul><li>SUBNET_ID=subnet-0d8da75e2e14b6784 # <b>ap-southeast-5a</b> 172.31.0.0/20 2406:da10:8bc3:800a::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-099c820bdb4a08dea # <b>ap-southeast-5b</b> 172.31.16.0/20 2406:da10:8bc3:800b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-0fe8f02afa7510556 # <b>ap-southeast-5c</b> 172.31.32.0/20 2406:da10:8bc3:800c::/64 <b>No One Zone EFS</b></li></ul></li>
+<li><b>ap-southeast-4 Melbourne (Australia)</b> vpc-050e6a13f61233e16 172.31.0.0/16 2406:da1f:cf5:6d00::/56
+<ul><li>SUBNET_ID=subnet-004dab206ce6b42f9 # <b>ap-southeast-4a</b> 172.31.16.0/20 2406:da1f:cf5:6d0a::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-0db47ec97fd76306f # <b>ap-southeast-4b</b> 172.31.0.0/20 2406:da1f:cf5:6d0b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-092cd6e10dd4d848c # <b>ap-southeast-4c</b> 172.31.32.0/20 2406:da1f:cf5:6d0c::/64 <b>No One Zone EFS</b></li></ul></li>
+<li><b>ap-south-1 Mumbai (India)</b> vpc-083f2e2f1043f9baf 172.31.0.0/16 2406:da1a:d73:6f00::/56
+<ul><li>SUBNET_ID=subnet-06a0b4790cea226b7 # <b>ap-south-1a</b> 172.31.32.0/20 2406:da1a:d73:6f0a::/64</li>
+<li>SUBNET_ID=subnet-07eaadfaa1dbe1574 # <b>ap-south-1b</b> 172.31.0.0/20 2406:da1a:d73:6f0b::/64</li>
+<li>SUBNET_ID=subnet-08a8152a4789f029c # <b>ap-south-1c</b> 172.31.16.0/20 2406:da1a:d73:6f0c::/64</li></ul></li>
+<li><b>ap-northeast-3 Osaka (Japan)</b> vpc-02d2e3b97082021d5 172.31.0.0/16 2406:da16:57c:ed00::/56
+<ul><li>SUBNET_ID=subnet-06b6e68d8c91dc266 # <b>ap-northeast-3a</b> 172.31.32.0/20 2406:da16:57c:ed0a::/64</li>
+<li>SUBNET_ID=subnet-0d50bae2fa8b3060e # <b>ap-northeast-3b</b> 172.31.16.0/20 2406:da16:57c:ed0b::/64</li>
+<li>SUBNET_ID=subnet-0148d030cb44c9ba6 # <b>ap-northeast-3c</b> 172.31.0.0/20 2406:da16:57c:ed0c::/64</li></ul></li>
+<li><b>ap-northeast-2 Seoul (South Korea)</b> vpc-013046897f4e7945d 172.31.0.0/16 2406:da12:e63:8e00::/56
+<ul><li>SUBNET_ID=subnet-077b6fabc4e5f8e84 # <b>ap-northeast-2a</b> 172.31.0.0/20 2406:da12:e63:8e0a::/64</li>
+<li>SUBNET_ID=subnet-0540703fa4a6cd510 # <b>ap-northeast-2b</b> 172.31.16.0/20 2406:da12:e63:8e0b::/64</li>
+<li>SUBNET_ID=subnet-08fc4c8496d4740b1 # <b>ap-northeast-2c</b> 172.31.32.0/20 2406:da12:e63:8e0c::/64</li>
+<li>SUBNET_ID=subnet-01b8bd04ac6b0099a # <b>ap-northeast-2d</b> 172.31.48.0/20 2406:da12:e63:8e0d::/64 <b>No One Zone EFS</b></li></ul></li>
+<li><b>ap-southeast-1 Singapore</b> vpc-0a3baacfa1dbccc69 172.31.0.0/16 2406:da18:5b1:8700::/56
+<ul><li>SUBNET_ID=subnet-096c125aa8f150e7e # <b>ap-southeast-1a</b> 172.31.16.0/20 2406:da18:5b1:870a::/64</li>
+<li>SUBNET_ID=subnet-002b0a1ca4d87513b # <b>ap-southeast-1b</b> 172.31.32.0/20 2406:da18:5b1:870b::/64</li>
+<li>SUBNET_ID=subnet-0acdc36da57a3c1ed # <b>ap-southeast-1c</b> 172.31.0.0/20 2406:da18:5b1:870c::/64 <b>No One Zone EFS</b></li></ul></li>
+<li><b>ap-southeast-2 Sydney (Australia)</b> vpc-065b4760a63954c73 172.31.0.0/16 2406:da1c:255:a800::/56
+<ul><li>SUBNET_ID=subnet-059ec3e9a9d9ab128 # <b>ap-southeast-2a</b> 172.31.32.0/20 2406:da1c:255:a80a::/64</li>
+<li>SUBNET_ID=subnet-0d706a035c09fdd2d # <b>ap-southeast-2b</b> 172.31.0.0/20 2406:da1c:255:a80b::/64</li>
+<li>SUBNET_ID=subnet-0533cda05fa4b7606 # <b>ap-southeast-2c</b> 172.31.16.0/20 2406:da1c:255:a80c::/64</li></ul></li>
+<li><b>ap-southeast-7 Thailand</b> vpc-0da02874a0c9b00ce 172.31.0.0/16 2406:da14:862d:8d00::/56
+<ul><li>SUBNET_ID=subnet-00314214c34b65702 # <b>ap-southeast-7a</b> 172.31.16.0/20 2406:da14:862d:8d0a::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-045bce508818a2069 # <b>ap-southeast-7b</b> 172.31.0.0/20 2406:da14:862d:8d0b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-0a0b5d80f8c772d69 # <b>ap-southeast-7c</b> 172.31.32.0/20 2406:da14:862d:8d0c::/64 <b>No One Zone EFS</b></li></ul></li>
+<li><b>ap-northeast-1 Tokyo (Japan)</b> vpc-0e1b2bb4de2b6c588 172.31.0.0/16 2406:da14:f5c:c900::/56
+<ul><li>SUBNET_ID=subnet-036f7e02ca4ffc438 # <b>ap-northeast-1a</b> 172.31.32.0/20 2406:da14:f5c:c90a::/64</li>
+<li>SUBNET_ID=subnet-0880f3c91cad791fe # <b>ap-northeast-1c</b> 172.31.0.0/20 2406:da14:f5c:c90c::/64</li>
+<li>SUBNET_ID=subnet-02bce10cacfd74c99 # <b>ap-northeast-1d</b> 172.31.16.0/20 2406:da14:f5c:c90d::/64 <b>No One Zone EFS</b></li></ul></li></ul>
+<h3><span id="Canada">Canada</span></h3>
+<ul><li><b>ca-central-1 Canada</b> vpc-0de19055175f2bd9a 172.31.0.0/16 2600:1f11:e3:1500::/56
+<ul><li>SUBNET_ID=subnet-0e87c64e10d324500 # <b>ca-central-1a</b> 172.31.16.0/20 2600:1f11:e3:150a::/64</li>
+<li>SUBNET_ID=subnet-02788867436b1cba2 # <b>ca-central-1b</b> 172.31.0.0/20 2600:1f11:e3:150b::/64</li>
+<li>SUBNET_ID=subnet-028f9f94c0904aefe # <b>ca-central-1d</b> 172.31.32.0/20 2600:1f11:e3:150d::/64 <b>No One Zone EFS</b></li></ul></li>
+<li><b>ca-west-1 Calgary</b> vpc-0f7f63453b8423fb3 172.31.0.0/16 2600:1f1a:49a2:3500::/56
+<ul><li>SUBNET_ID=subnet-0647e463be34d0cb3 # <b>ca-west-1a</b> 172.31.32.0/20 2600:1f1a:49a2:350a::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-0605a65bab1617583 # <b>ca-west-1b</b> 172.31.16.0/20 2600:1f1a:49a2:350b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-042fed6964e7a3a99 # <b>ca-west-1c</b> 172.31.0.0/20 2600:1f1a:49a2:350c::/64 <b>No One Zone EFS</b></li></ul></li></ul>
+<h3><span id="Europe">Europe</span></h3>
+<ul><li><b>eu-central-1 Frankfurt (Germany)</b> vpc-019870683f68a3e8c 172.31.0.0/16 2a05:d014:3c:9000::/56
+<ul><li>SUBNET_ID=subnet-00e6cbdbd92b983ba # <b>eu-central-1a</b> 172.31.16.0/20 2a05:d014:3c:900a::/64</li>
+<li>SUBNET_ID=subnet-04b3754db91a642f1 # <b>eu-central-1b</b> 172.31.32.0/20 2a05:d014:3c:900b::/64</li>
+<li>SUBNET_ID=subnet-07b43b273864248c9 # <b>eu-central-1c</b> 172.31.0.0/20 2a05:d014:3c:900c::/64</li></ul></li>
+<li><b>eu-west-1 Ireland</b> vpc-09b267a4fba50db4d 172.31.0.0/16 2a05:d018:e47:4700::/56
+<ul><li>SUBNET_ID=subnet-0bff2a8c333b476f7 # <b>eu-west-1a</b> 172.31.0.0/20 2a05:d018:e47:470a::/64</li>
+<li>SUBNET_ID=subnet-08a54608e8d16de27 # <b>eu-west-1b</b> 172.31.16.0/20 2a05:d018:e47:470b::/64</li>
+<li>SUBNET_ID=subnet-0094802941ab4fd45 # <b>eu-west-1c</b> 172.31.32.0/20 2a05:d018:e47:470c::/64</li></ul></li>
+<li><b>eu-west-2 London (United Kingdom)</b> vpc-0781200e8b247ab59 172.31.0.0/16 2a05:d01c:dc5:e00::/56
+<ul><li>SUBNET_ID=subnet-009c5818bc8f692dc # <b>eu-west-2a</b> 172.31.16.0/20 2a05:d01c:dc5:e0a::/64</li>
+<li>SUBNET_ID=subnet-000bf4ce19ef31037 # <b>eu-west-2b</b> 172.31.32.0/20 2a05:d01c:dc5:e0b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-0d1ffd58cb74f4c69 # <b>eu-west-2c</b> 172.31.0.0/20 2a05:d01c:dc5:e0c::/64</li></ul></li>
+<li><b>eu-south-1 Milan (Italy)</b> vpc-0e7873f104b471b75 172.31.0.0/16 2a05:d01a:454:b900::/56
+<ul><li>SUBNET_ID=subnet-06893cfded4671073 # <b>eu-south-1a</b> 172.31.32.0/20 2a05:d01a:454:b90a::/64</li>
+<li>SUBNET_ID=subnet-01c49a4382c617aeb # <b>eu-south-1b</b> 172.31.0.0/20 2a05:d01a:454:b90b::/64</li>
+<li>SUBNET_ID=subnet-06449b145048b5d2a # <b>eu-south-1c</b> 172.31.16.0/20 2a05:d01a:454:b90c::/64</li></ul></li>
+<li><b>eu-west-3 Paris (France)</b> vpc-0b925df1e50d41329 172.31.0.0/16 2a05:d012:faa:da00::/56
+<ul><li>SUBNET_ID=subnet-0e67241b9b3c6af66 # <b>eu-west-3a</b> 172.31.0.0/20 2a05:d012:faa:da0a::/64</li>
+<li>SUBNET_ID=subnet-085653eab7dc282e3 # <b>eu-west-3b</b> 172.31.16.0/20 2a05:d012:faa:da0b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-08a391278f1c3c914 # <b>eu-west-3c</b> 172.31.32.0/20 2a05:d012:faa:da0c::/64</li></ul></li>
+<li><b>eu-south-2 Spain</b> vpc-0f40e7691c6804e33 172.31.0.0/16 2a05:d011:9ab:4400::/56
+<ul><li>SUBNET_ID=subnet-0a96a6621889232cd # <b>eu-south-2a</b> 172.31.32.0/20 2a05:d011:9ab:440a::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-0b58b1b03d2bcb684 # <b>eu-south-2b</b> 172.31.16.0/20 2a05:d011:9ab:440b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-05cfbcf1a9a223783 # <b>eu-south-2c</b> 172.31.0.0/20 2a05:d011:9ab:440c::/64 <b>No One Zone EFS</b></li></ul></li>
+<li><b>eu-north-1 Stockholm (Sweden)</b> vpc-0c21b7400450d2459 172.31.0.0/16 2a05:d016:6d7:ca00::/56
+<ul><li>SUBNET_ID=subnet-0ac85ff2069cbf7e5 # <b>eu-north-1a</b> 172.31.16.0/20 2a05:d016:6d7:ca0a::/64</li>
+<li>SUBNET_ID=subnet-0bc8fcfb87c9e2214 # <b>eu-north-1b</b> 172.31.32.0/20 2a05:d016:6d7:ca0b::/64</li>
+<li>SUBNET_ID=subnet-00d33e016fc7d3e53 # <b>eu-north-1c</b> 172.31.0.0/20 2a05:d016:6d7:ca0c::/64</li></ul></li>
+<li><b>eu-central-2 Zurich (Switzerland)</b> vpc-0950a85e695facc0f 172.31.0.0/16 2a05:d019:113:7b00::/56
+<ul><li>SUBNET_ID=subnet-0742abe4e686a9da4 # <b>eu-central-2a</b> 172.31.0.0/20 2a05:d019:113:7b0a::/64</li>
+<li>SUBNET_ID=subnet-0818ffae2db13b626 # <b>eu-central-2b</b> 172.31.16.0/20 2a05:d019:113:7b0b::/64</li>
+<li>SUBNET_ID=subnet-0bd0fc6883a071d62 # <b>eu-central-2c</b> 172.31.32.0/20 2a05:d019:113:7b0c::/64</li></ul></li></ul>
+<h3><span id="Mexico">Mexico</span></h3>
+<ul><li><b>mx-central-1 Mexico</b> vpc-094bce8ecd3243444 172.31.0.0/16 2600:1f17:4050:7a00::/56
+<ul><li>SUBNET_ID=subnet-02b23bb5282680493 # <b>mx-central-1a</b> 172.31.32.0/20 2600:1f17:4050:7a0a::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-0cfbbf3ad97a5f2b9 # <b>mx-central-1b</b> 172.31.16.0/20 2600:1f17:4050:7a0b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-01a015dd123bb5e09 # <b>mx-central-1c</b> 172.31.0.0/20 2600:1f17:4050:7a0c::/64 <b>No One Zone EFS</b></li></ul></li></ul>
+<h3><span id="Middle_East">Middle East</span></h3>
+<ul><li><b>me-south-1 Bahrain</b> vpc-0c9277686201ded3c 172.31.0.0/16 2a05:d01e:ccf:6400::/56
+<ul><li>SUBNET_ID=subnet-0ce1fae020a577691 # <b>me-south-1a</b> 172.31.0.0/20 2a05:d01e:ccf:640a::/64</li>
+<li>SUBNET_ID=subnet-04ca5ec124b2c6fe9 # <b>me-south-1b</b> 172.31.16.0/20 2a05:d01e:ccf:640b::/64</li>
+<li>SUBNET_ID=subnet-09715bb7aa78368b8 # <b>me-south-1c</b> n172.31.32.0/20 2a05:d01e:ccf:640c::/64</li></ul></li>
+<li><b>me-central-1 United Arab Emirates (UAE)</b> vpc-063bea1bfb197d1e0 172.31.0.0/16 2406:da17:250:5f00::/56
+<ul><li>SUBNET_ID=subnet-030d8a90e352dd6a7 # <b>me-central-1a</b> 172.31.32.0/20 2406:da17:250:5f0a::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-03984a2fbe751af4d # <b>me-central-1b</b> 172.31.16.0/20 2406:da17:250:5f0b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-0a5758bd3cefb44ea # <b>me-central-1c</b> 172.31.0.0/20 2406:da17:250:5f0c::/64 <b>No One Zone EFS</b></li></ul></li></ul>
+<h3><span id="Israel">Israel</span></h3>
+<ul><li><b>il-central-1 Tel Aviv</b> vpc-001300aab3fff96a3 172.31.0.0/16 2a05:d025:b2e:d900::/56
+<ul><li>SUBNET_ID=subnet-0b10e71d7c20f9be1 # <b>il-central-1a</b> 172.31.32.0/20 2a05:d025:b2e:d90a::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-003c8a27228061d84 # <b>il-central-1b</b> 172.31.16.0/20 2a05:d025:b2e:d90b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-0138fe3871346a436 # <b>il-central-1c</b> 172.31.0.0/20 2a05:d025:b2e:d90c::/64 <b>No One Zone EFS</b></li></ul></li></ul>
+<h3><span id="South_America">South America</span></h3>
+<ul><li><b>sa-east-1 Sao Paulo (Brazil)</b> vpc-0e5046b6cc3667535 172.31.0.0/16 2600:1f1e:c9c:8300::/56
+<ul><li>SUBNET_ID=subnet-0f338185ace77d10e # <b>sa-east-1a</b> 172.31.0.0/20 2600:1f1e:c9c:830a::/64</li>
+<li>SUBNET_ID=subnet-08ab8eeee68923465 # <b>sa-east-1b</b> 172.31.16.0/20 2600:1f1e:c9c:830b::/64</li>
+<li>SUBNET_ID=subnet-0503f679d0bd4969f # <b>sa-east-1c</b> 172.31.32.0/20 2600:1f1e:c9c:830c::/64</li></ul></li></ul>
+<h2><span id="Log">Log</span></h2>
+<ul><li>Published to: <a rel="nofollow" href="https://lamurakami.github.io/blog/2025/02/06/I_created_63_One_Zone_Lifecycle_Managed_AWS_EFS.html">https://lamurakami.github.io/blog/2025/02/06/I_created_63_One_Zone_Lifecycle_Managed_AWS_EFS.html</a></li>
+<li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z25/z2502/2025-02-02/Daily-ak19.txt">Monday, February 3, 2025</a> I completed the last test of the new EFS3 filesystems early in the morning after midnight.
+<ul><li>I found 10 regions where One Zone storage classes are not supported and 7 Availability Zones where One Zone storage classes are not supported but other AZs in the region do support them.</li>
+<li>For all the rest of the Availability Zones a One Zone EFS was created utilizing Lifecycle Management and the Infrequent Access One Zone storage class.</li>
+<li>It look like I created and tested 63 EFS for 63 AZs among the 22 Regions where the where One Zone storage classes are available.</li></ul></li>
+<li>This page was created in 2025 to facilitate testing my addition of a One Zone EFS with Lifecycle Management in every Availability Zone it was available for at the beginning of 2025.
+<ul><li>I am only using the filesystem in the us-west-2d Oregon Availability Zone where I put the Zz files and expect to see a 75% reduction in cost over the EBS volume I was using.</li></ul></li></ul>
+<!-- 
+NewPP limit report
+Cached time: 20250207040917
+Cache expiry: 86400
+Reduced expiry: false
+Complications: [show‐toc]
+CPU time usage: 0.012 seconds
+Real time usage: 0.012 seconds
+Preprocessor visited node count: 41/1000000
+Post‐expand include size: 20/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/100
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    0.000      1 -total
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:534-0!canonical and timestamp 20250207040917 and revision id 8534. Rendering was triggered because: edit-page
+ -->
+</div>
+</div>
+<!-- end content -->
+<div id="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" style="display:none" /><div lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><label for="toctogglecheckbox"></label></div>
+<div data-nosnippet="">Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=AWS_Availability_Zone_subnet_id&amp;oldid=8534">https://ak20.lam1.us/A/index.php?title=AWS_Availability_Zone_subnet_id&amp;oldid=8534</a>"</div>
+<ul>
+<li><a href="#AWS_Availability_Zones_and_subnets">1 AWS Availability Zones and subnets</a></li>
+<li><a href="#AWS_Elastic_File_System_(EFS)_and_Availability_Zones">2 AWS Elastic File System (EFS) and Availability Zones</a></li>
+<li><a href="#AWS_LAM_VPC_Availability_Zone_subnet_id">3 AWS LAM VPC Availability Zone subnet id</a>
+<ul>
+<li><a href="#United_States">3.1 United States</a></li>
+<li><a href="#Africa">3.2 Africa</a></li>
+<li><a href="#Asia_Pacific">3.3 Asia Pacific</a></li>
+<li><a href="#Canada">3.4 Canada</a></li>
+<li><a href="#Europe">3.5 Europe</a></li>
+<li><a href="#Mexico">3.6 Mexico</a></li>
+<li><a href="#Middle_East">3.7 Middle East</a></li>
+<li><a href="#Israel">3.8 Israel</a></li>
+<li><a href="#South_America">3.9 South America</a></li>
+</ul>
+</li>
+<li><a href="#Log">4 Log</a></li>
+</ul>
+</div>
+<br><hr>
+<a href="#top"><img border="0" src="/ScrollUp.gif" alt="up" />
+Top of this document
+<img border="0" src="/ScrollUp.gif" alt="up" /></a>
+
+<span style="float: right;">
+Thursday, February 6, 2025 @ 7:22:55 PM (Alaska Time)</span>

@@ -5,8 +5,11 @@ date: 2025-02-06 19:05:00 -0800
 ---
 <span style="float: right;"><a href="#toc">Contents</a></span>
 <h2>One Zone Lifecycle Managed AWS EFS can be cheaper than standard</h2>
+
 <!-- start content -->
-<div id="mw-content-text"><div lang="en" dir="ltr"><p>
+<div id="mw-content-text"><div lang="en" dir="ltr">
+
+<p><br />
 In 2025 I created 63 One Zone Lifecycle Managed <a rel="nofollow" href="https://aws.lam1.us/a/Amazon_Web_Services_(AWS)">Amazon Web Services (AWS)</a> <a rel="nofollow" href="https://lamurakami.gitlab.io/aws-efs/">Elastic File System (EFS)</a>.  One for each Availability Zone where supported that I have access to.
 </p><p>Each AWS Region is completely independent and designed to be isolated from the other AWS Regions.  Each Region is a separate geographic area.  Amazon Web Services (AWS) has multiple Availability Zones for each of it's regions.
 </p>
@@ -58,6 +61,10 @@ In 2025 I created 63 One Zone Lifecycle Managed <a rel="nofollow" href="https://
 <ul><li>SUBNET_ID=subnet-0b274624984de468f # <b>ap-east-1a</b> 172.31.16.0/20 2406:da1e:ee0:4b0a::/64</li>
 <li>SUBNET_ID=subnet-0080494b306578605 # <b>ap-east-1b</b> 172.31.0.0/20 2406:da1e:ee0:4b0b::/64</li>
 <li>SUBNET_ID=subnet-08686462be2b1e362 # <b>ap-east-1c</b> 172.31.32.0/20 2406:da1e:ee0:4b0c::/64</li></ul></li>
+<li><b>ap-east-2 Asia Pacific (Taipei)</b> vpc-092bf97ed890fc17b 172.31.0.0/16 2406:da1c:829b:5700::/56
+<ul><li>SUBNET_ID=subnet-06ba9692c5c7007ad # <b>ap-east-2a</b> 172.31.32.0/20 2406:da1c:829b:570a::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-021c9a17c5324e8ca # <b>ap-east-2b</b> 172.31.16.0/20 2406:da1c:829b:570b::/64 <b>No One Zone EFS</b></li>
+<li>SUBNET_ID=subnet-05711fb856bd279b2 # <b>ap-east-2c</b> 172.31.0.0/20 2406:da1c:829b:570c::/64 <b>No One Zone EFS</b></li></ul></li>
 <li><b>ap-south-2 Hyderabad (India)</b> vpc-0306265fa925185cf 172.31.0.0/16 2406:da1b:ad5:d700::/56
 <ul><li>SUBNET_ID=subnet-024131dd54bff4d9f # <b>ap-south-2a</b> 172.31.0.0/20 2406:da1b:ad5:d70a::/64 <b>No One Zone EFS</b></li>
 <li>SUBNET_ID=subnet-059fbf5ac5c6405dd # <b>ap-south-2b</b> 172.31.32.0/20 2406:da1b:ad5:d70b::/64 <b>No One Zone EFS</b></li>
@@ -171,6 +178,7 @@ In 2025 I created 63 One Zone Lifecycle Managed <a rel="nofollow" href="https://
 <li>SUBNET_ID=subnet-0503f679d0bd4969f # <b>sa-east-1c</b> 172.31.32.0/20 2600:1f1e:c9c:830c::/64</li></ul></li></ul>
 <h2><span id="Log">Log</span></h2>
 <ul><li>Published to: <a rel="nofollow" href="https://lamurakami.github.io/blog/2025/02/07/I_created_63_One_Zone_Lifecycle_Managed_AWS_EFS.html">https://lamurakami.github.io/blog/2025/02/07/I_created_63_One_Zone_Lifecycle_Managed_AWS_EFS.html</a></li>
+<li>July 2, 2025 - I am up to 33 regions, 12 of which do not support a One Zone Lifecycle Managed EFS.</li>
 <li><a rel="nofollow" href="https://ak20.lam1.us/Zz/z25/z2502/2025-02-13/Daily-ak19.txtThursday,">February 13, 2025</a> It looks like it was 11 regions with No One Zone EFS but I did not note eu-central-2 Zurich (Switzerland) until today.</li>
 <li>On <a rel="nofollow" href="https://ak20.lam1.us/Zz/z25/z2502/2025-02-02/Daily-ak19.txt">Monday, February 3, 2025</a> I completed the last test of the new EFS3 filesystems early in the morning after midnight.
 <ul><li>I found 10 regions where One Zone storage classes are not supported and 7 Availability Zones where One Zone storage classes are not supported but other AZs in the region do support them.</li>
@@ -180,12 +188,12 @@ In 2025 I created 63 One Zone Lifecycle Managed <a rel="nofollow" href="https://
 <ul><li>I am only using the filesystem in the us-west-2d Oregon Availability Zone where I put the Zz files and expect to see a 75% reduction in cost over the EBS volume I was using.</li></ul></li></ul>
 <!-- 
 NewPP limit report
-Cached time: 20250214023447
+Cached time: 20250703040502
 Cache expiry: 86400
 Reduced expiry: false
 Complications: [show‐toc]
-CPU time usage: 0.018 seconds
-Real time usage: 0.018 seconds
+CPU time usage: 0.012 seconds
+Real time usage: 0.012 seconds
 Preprocessor visited node count: 42/1000000
 Post‐expand include size: 40/2097152 bytes
 Template argument size: 0/2097152 bytes
@@ -199,13 +207,13 @@ Transclusion expansion time report (%,ms,calls,template)
 100.00%    0.000      1 -total
 -->
 
-<!-- Saved in parser cache with key wikidb:pcache:idhash:534-0!canonical and timestamp 20250214023447 and revision id 8567. Rendering was triggered because: edit-page
+<!-- Saved in parser cache with key wikidb:pcache:idhash:534-0!canonical and timestamp 20250703040502 and revision id 8834. Rendering was triggered because: edit-page
  -->
 </div>
 </div>
 <!-- end content -->
 <div id="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" style="display:none" /><div lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><label for="toctogglecheckbox"></label></div>
-<div data-nosnippet="">Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=AWS_Availability_Zone_subnet_id&amp;oldid=8567">https://ak20.lam1.us/A/index.php?title=AWS_Availability_Zone_subnet_id&amp;oldid=8567</a>"</div>
+<div data-nosnippet="">Retrieved from "<a dir="ltr" href="https://ak20.lam1.us/A/index.php?title=AWS_Availability_Zone_subnet_id&amp;oldid=8834">https://ak20.lam1.us/A/index.php?title=AWS_Availability_Zone_subnet_id&amp;oldid=8834</a>"</div>
 <ul>
 <li><a href="#AWS_Availability_Zones_and_subnets">1 AWS Availability Zones and subnets</a></li>
 <li><a href="#AWS_Elastic_File_System_(EFS)_and_Availability_Zones">2 AWS Elastic File System (EFS) and Availability Zones</a></li>
@@ -231,4 +239,4 @@ Top of this document
 <img border="0" src="/ScrollUp.gif" alt="up" /></a>
 
 <span style="float: right;">
-Thursday, February 13, 2025 @ 5:46:47 PM (Alaska Time)</span>
+Wednesday, July 2, 2025 @ 8:57:17 PM (Alaska Time)</span>
